@@ -1,0 +1,28 @@
+body {
+    font-family: "Sigmar", serif;
+    background-color: #640D75;
+    color: #C8F29F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.sigmar-regular {
+  font-family: "Sigmar", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+}
+.btn-login, .btn-register {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
