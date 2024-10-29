@@ -1,21 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR.js Example</title>
-    <!-- A-Frame (cargar antes de AR.js) -->
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <!-- AR.js -->
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    <title>Bienvenido a Pioneras AR</title>
+    <!-- Paleta de colores y tipografía de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=TU_FUENTE&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
 </head>
-<body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
-        <!-- Marker -->
-        <a-marker type="pattern" url="markers/juanaazurduypattern.patt">
-            <a-box position="0 0.5 0" material="color: violet;"></a-box>
-        </a-marker>
-        <a-entity camera></a-entity>
-    </a-scene>
+<body>
+    <div class="container">
+        <h1>Pioneras de la Ciencia</h1>
+        <p>Explora la historia de las primeras mujeres en la ciencia a través de realidad aumentada.</p>
+        <button class="btn-login" onclick="showLogin()">Iniciar Sesión</button>
+        <button class="btn-register" onclick="showRegister()">Registrarse</button>
+    </div>
+
+    <!-- Ventanas modales para inicio de sesión y registro -->
+    <div id="login-modal" class="modal">
+        <!-- Contenido del modal de inicio de sesión -->
+    </div>
+    <div id="register-modal" class="modal">
+        <!-- Contenido del modal de registro -->
+    </div>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
