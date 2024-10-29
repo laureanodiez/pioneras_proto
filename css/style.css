@@ -43,6 +43,12 @@ body {
     cursor: pointer;
 }
 
+.continue-link {
+    color: #FFFFFF;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -52,6 +58,6 @@ body {
     text-align: center;
 }
 .loading-gif {
-    width: 70px; /* Ajusta según lo que prefieras */
+    width: 90px; /* Ajusta según lo que prefieras */
     height: auto;
 }
