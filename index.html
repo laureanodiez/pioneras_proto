@@ -15,16 +15,28 @@
     <div class="container">
         <h1>Pioneras de la Ciencia</h1>
         <p>Explora la historia de las primeras mujeres en la ciencia a través de realidad aumentada.</p>
+        
+        <!-- Botones para inicio de sesión, registro y continuar -->
         <button class="btn-login" onclick="showLogin()">Iniciar Sesión</button>
         <button class="btn-register" onclick="showRegister()">Registrarse</button>
+        <button class="btn-continue" onclick="continueWithoutLogin()">Continuar sin registrarse</button>
     </div>
 
     <!-- Ventanas modales para inicio de sesión y registro -->
-    <div id="login-modal" class="modal">
-        <!-- Contenido del modal de inicio de sesión -->
+    <div id="login-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <p>Inicio de sesión (demo)</p>
+            <button onclick="login()">Iniciar</button>
+            <button onclick="closeModal()">Cerrar</button>
+        </div>
     </div>
-    <div id="register-modal" class="modal">
-        <!-- Contenido del modal de registro -->
+
+    <div id="register-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <p>Registro (demo)</p>
+            <button onclick="login()">Registrarse</button>
+            <button onclick="closeModal()">Cerrar</button>
+        </div>
     </div>
 
     <script src="js/main.js"></script>
