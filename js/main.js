@@ -8,7 +8,7 @@ function showRegister() {
     document.getElementById("register-modal").style.display = "block";
 }
 
-// Cerrar modal (puedes añadir botones en los modales para cerrar)
+// Cerrar todos los modales
 function closeModal() {
     document.getElementById("login-modal").style.display = "none";
     document.getElementById("register-modal").style.display = "none";
@@ -16,15 +16,20 @@ function closeModal() {
 
 // Simular inicio de sesión y redirigir al tutorial
 function login() {
-    closeModal(); // Cierra el modal de inicio de sesión
+    closeModal(); // Cierra el modal actual
     window.location.href = "loading.html"; // Redirige a la pantalla de carga
 }
 
-// Función para mostrar el tutorial tras la pantalla de carga
+// Función para continuar sin registrarse e ir al tutorial
+function continueWithoutLogin() {
+    window.location.href = "loading.html";
+}
+
+// Redirigir desde la pantalla de carga al tutorial después de unos segundos
 function redirectToTutorial() {
     setTimeout(() => {
-        window.location.href = "tutorial.html"; // Cambia a la página del tutorial después de unos segundos
-    }, 3000); // Tiempo de carga en milisegundos (3 segundos)
+        window.location.href = "tutorial.html"; // Redirige al tutorial
+    }, 3000); // Duración de la pantalla de carga (3 segundos)
 }
 
 // Llamar a redirectToTutorial si estamos en loading.html
