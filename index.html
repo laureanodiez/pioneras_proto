@@ -1,52 +1,139 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido a Pioneras AR</title>
-    <!-- Paleta de colores y tipografía de Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=TU_FUENTE&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <h1>Pioneras de la Ciencia</h1>
-        <p>La historia de las primeras mujeres científicas de la UNR</p>
+    <head>
+        <!-- Metadatos y enlace al archivo de estilos -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pioneras</title>
+        <link rel="stylesheet" href="./css/style.css">
+        <!-- Paleta de colores y tipografía de Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
+        <!-- Enlace al archivo JavaScript principal -->
+        <script src="./js/main.js" defer></script>
+    </head>
 
-    <!-- Resumen de la Experiencia -->
-    <section class="summary-section">
-        <div class="text-content">
-            <h2>¿Qué es "Pioneras de la Ciencia"?</h2>
-            <p>Explorá la historia de las primeras científicas, con realidad aumentada que resalta sus logros y contribuciones. ¡Preparate para una experiencia inmersiva!</p>
-        </div>
-    </section>
-        
-        <!-- Botones para inicio de sesión, registro y continuar -->
-        <button class="btn-login" onclick="showLogin()">Iniciar Sesión</button>
-        <button class="btn-register" onclick="showRegister()">Registrarse</button>
-        <p><a href="loading.html" class="continue-link">Continuar sin registrarse</a></p>
-    </div>
-    
-    <!-- Ventanas modales para inicio de sesión y registro -->
-    <div id="login-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <p>Inicio de sesión (demo)</p>
-            <button onclick="login()">Iniciar</button>
-            <button onclick="closeModal()">Cerrar</button>
-        </div>
-    </div>
+    <body>
+        <header class="banner">
+            <div class="banner-content">
+                <!-- Título a la izquierda -->
+                <a href="index.html" target="">
+                    <span class="banner-title">Pioneras</span>
+                </a>
 
-    <div id="register-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <p>Registro (demo)</p>
-            <button onclick="login()">Registrarse</button>
-            <button onclick="closeModal()">Cerrar</button>
-        </div>
-    </div>
+                <!-- Botones de navegación y logo a la derecha -->
+                <nav class="banner-nav">
+                    <a href="#" onclick="showLoginModal()" class="nav-item">Comenzar</a>
+                    <a href="informacion.html" class="nav-item">Información</a>
+                    <a href="sobre-nosotros.html" class="nav-item">Sobre Nosotros</a>
+                    <a href="https://www.unr.edu.ar" target="_blank">
+                        <img src="./assets/banners/logounr.png" alt="Logo UNR" class="unr-logo">
+                    </a>
+                </nav>
+            
+                <!-- Menú desplegable para mobile -->
+                <div class="dropdown-menu">
+                    <button class="menu-icon" onclick="showDropdown()">≡</button>
+                    <div class="dropdown-content">
+                        <button onclick="showLoginModal()">Comenzar</button>
+                        <button onclick="location.href='informacion.html'">Información</button>
+                        <button onclick="location.href='sobre-nosotros.html'">Sobre Nosotros</button>
+                        <a href="https://www.unr.edu.ar" target="_blank">
+                            <img src="./assets/banners/logounr.png" alt="Logo UNR">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-    <script src="js/main.js"></script>
-</body>
+        <div class="main-content">
+            <!-- Todo el contenido de la página aquí -->
+            
+            <!-- Contenedor principal para las dos secciones -->
+            <section class="contenedor-principal">
+                <!-- Contenedor Izquierda con título "Pioneras" y subtítulo -->
+                <div class="contenedor-izquierda">
+                    <h1 class="title">Pioneras</h1>
+                    <h2 class="subtitle">de la ciencia</h2>
+                </div>
+                
+                <!-- Contenedor Derecha con fondo pinneado y texto en cursiva -->
+                <div class="contenedor-derecha">
+                    <p class="right-text">La historia de las primeras mujeres científicas de la UNR</p>
+                </div>
+            </section>
+
+            <!-- Espacio en blanco -->
+            <div class="spacer"></div>
+
+            <!-- Sección con efecto parallax -->
+            <section class="parallax">
+                <div class="text-parallax">
+                    <h1>Experiencia RA</h1>
+                </div>
+            </section>
+
+
+            <!-- Espacio en blanco -->
+            <div class="spacer"></div>
+            
+            <!-- Contenedor invertido de "Explorá la historia..." -->
+            <section class="contenedor-principal">
+                <!-- Contenedor Derecha (Texto en color de fondo) -->
+                <div class="contenedor-derecha">
+                    <p class="right-text">Explorá la historia de las primeras científicas con Realidad Aumentada!</p>
+                </div>
+
+                <!-- Contenedor Izquierda con parallax y botón "Comenzar Ya!" -->
+                <div class="contenedor-izquierda parallax">
+                    <div class="start-container">
+                        <button id="start-button" onclick="showLoginModal()">Comenzar ya!</button>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Modal para inicio de sesión/registro -->
+            <div id="login-modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">×</span>
+                    <h2>Iniciar Sesión</h2>
+                    <input type="email" placeholder="Correo Electrónico" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    <button onclick="login()">Iniciar Sesión</button>
+                    <p><span onclick="showRegisterModal()">¿No tienes cuenta? Registrarse</span></p>
+                    <div class="separator">O</div>
+                    <button class="google-login">Iniciar con Google</button>
+                    <p><a href="#">¿Olvidaste tu contraseña? Recuperar contraseña</a></p>
+                    <a href="#" onclick="continueWithoutLogin()">Continuar sin ingresar</a>
+                </div>
+            </div>
+
+            <div id="register-modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">×</span>
+                    <h2>Registrarse</h2>
+                    <input type="text" placeholder="Nombre" required>
+                    <input type="email" placeholder="Correo Electrónico" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    <button onclick="register()">Registrarse</button>
+                    <p><a href="#" onclick="showLoginModal()">¿Ya tienes cuenta? Iniciar Sesión</a></p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-content">
+                    <p>&copy; 2024 Pioneras. Todos los derechos reservados.</p>
+                    <p>#XperienciaUNR - Universidad Nacional de Rosario</p>
+                    <div class="footer-links">
+                        <a href="#">Política de Privacidad</a>
+                        <a href="#">Términos de Servicio</a>
+                        <a href="#">Contacto</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </body>
 </html>
