@@ -2,6 +2,7 @@
 // Función para mostrar el modal de inicio de sesión
 function showLoginModal() {
     document.getElementById("login-modal").classList.remove("hidden");
+    document.getElementById("register-modal").classList.add("hidden");
 }
 
 // Función para ocultar todos los modales
@@ -10,6 +11,7 @@ function closeModal() {
 }
 
 // Cierra el modal al hacer clic fuera de su contenido
+/*
 window.addEventListener("click", function (e) {
     const modals = document.querySelectorAll(".modal:not(.hidden)");
     modals.forEach(modal => {
@@ -18,7 +20,7 @@ window.addEventListener("click", function (e) {
         }
     });
 });
-
+*/
 // Función para mostrar el formulario de registro
 function showRegisterModal() {
     closeModal();
