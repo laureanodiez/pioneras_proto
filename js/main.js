@@ -11,16 +11,15 @@ function closeModal() {
 }
 
 // Cierra el modal al hacer clic fuera de su contenido
-/*
-window.addEventListener("click", function (e) {
-    const modals = document.querySelectorAll(".modal:not(.hidden)");
-    modals.forEach(modal => {
+document.querySelectorAll(".modal").forEach(modal => {
+    modal.addEventListener("click", function (e) {
+        // Cierra el modal solo si el clic no fue dentro de ".modal-content"
         if (!e.target.closest(".modal-content")) {
             closeModal();
         }
     });
 });
-*/
+
 // Función para mostrar el formulario de registro
 function showRegisterModal() {
     closeModal();
