@@ -1,16 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutorial de Pioneras AR</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div class="container">
-        <h2>¿Cómo usar la Realidad Aumentada?</h2>
-        <p>Apunta tu cámara al marcador proporcionado para ver los elementos en realidad aumentada.</p>
-        <button class="btn-start-ar" onclick="window.location.href='ar.html'">Comenzar</button>
-    </div>
-</body>
+    <head>
+        <!-- Metadatos y enlace al archivo de estilos -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tutorial</title>
+        <link rel="stylesheet" href="./css/style.css">
+        <!-- Paleta de colores y tipografía de Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
+        <!-- Enlace al archivo JavaScript principal -->
+        <script src="./js/main.js" defer></script>
+    </head>
+
+    <body>
+        <header class="banner">
+            <div class="banner-content">
+                <!-- Título a la izquierda -->
+                <a href="index.html" target="">
+                    <span class="banner-title">Pioneras</span>
+                </a>
+
+                <!-- Botones de navegación y logo a la derecha -->
+                <nav class="banner-nav">
+                    <a href="#" onclick="showLoginModal()" class="nav-item">Iniciar Sesión</a>
+                    <a href="#" onclick="showRegisterModal()" class="nav-item">Registrarse</a>
+                    <a href="mas-informacion.html" class="nav-item">Más Información</a>
+                    <a href="sobre-nosotros.html" class="nav-item">Sobre Nosotros</a>
+                    <a href="https://www.unr.edu.ar" target="_blank">
+                        <img src="./assets/banners/logounr.png" alt="Logo UNR" class="unr-logo">
+                    </a>
+                </nav>
+            
+                <!-- Menú desplegable para mobile -->
+                <div class="dropdown-menu">
+                    <button class="menu-icon" onclick="showDropdown()">≡</button>
+                    <div class="dropdown-content">
+                        <button onclick="showLoginModal()">Iniciar Sesión</button>
+                        <button onclick="showRegisterModal()">Registrarse</button>
+                        <button onclick="location.href='mas-informacion.html'">Más Información</button>
+                        <button onclick="location.href='sobre-nosotros.html'">Sobre Nosotros</button>
+                        <a href="https://www.unr.edu.ar" target="_blank">
+                            <img src="./assets/banners/logounr.png" alt="Logo UNR">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Todo el contenido de la página aquí -->
+            
+            <!-- Contenedor principal para las dos secciones -->
+            <section class="contenedor-principal">
+                <!-- Contenedor Izquierda con título "Pioneras" y subtítulo -->
+                <div class="contenedor-izquierda">
+                    <h1 class="title">Experiencia RA</h1>
+                </div>
+                
+                <!-- Contenedor Derecha con fondo pinneado y texto en cursiva -->
+                <div class="contenedor-derecha">
+                    <p class="right-text">¿Cómo funciona la actividad inmersiva?</p>
+                </div>
+            </section>
+
+            <!-- Espacio en blanco -->
+            <div class="spacer"></div>
+            
+
+            <!-- Contenedor principal -->
+            <div class="container">
+                <h2>Cómo usar la Realidad Aumentada</h2>
+                <p>Apunta tu cámara al marcador proporcionado para ver los elementos en realidad aumentada.</p>
+                <button class="btn-start-ar" onclick="window.location.href='ar.html'">Comenzar</button>
+            </div>
+            
+            <!-- Modal para inicio de sesión/registro -->
+            <div id="login-modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">×</span>
+                    <h2>Iniciar Sesión</h2>
+                    <input type="email" placeholder="Correo Electrónico" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    <button onclick="login()">Iniciar Sesión</button>
+                    <p><span onclick="showRegisterModal()">¿No tienes cuenta? Registrarse</span></p>
+                    <div class="separator">O</div>
+                    <button class="google-login">Iniciar con Google</button>
+                    <p><a href="#">¿Olvidaste tu contraseña? Recuperar contraseña</a></p>
+                    <a href="#" onclick="continueWithoutLogin()">Continuar sin ingresar</a>
+                </div>
+            </div>
+
+            <div id="register-modal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">×</span>
+                    <h2>Registrarse</h2>
+                    <input type="text" placeholder="Nombre" required>
+                    <input type="email" placeholder="Correo Electrónico" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    <button onclick="register()">Registrarse</button>
+                    <p><a href="#" onclick="showLoginModal()">¿Ya tienes cuenta? Iniciar Sesión</a></p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-content">
+                    <p>&copy; 2024 Pioneras. Todos los derechos reservados.</p>
+                    <p>#XperienciaUNR - Universidad Nacional de Rosario</p>
+                    <div class="footer-links">
+                        <a href="#">Política de Privacidad</a>
+                        <a href="#">Términos de Servicio</a>
+                        <a href="#">Contacto</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </body>
 </html>

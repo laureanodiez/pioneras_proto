@@ -264,6 +264,8 @@ body, html {
         justify-content: center;
         align-items: center;
         display: flex;
+        padding: 0; /* Elimina cualquier espacio extra */
+        margin: 0;  /* Ajusta los márgenes en dispositivos móviles */
     }
     
     .contenedor-principal .contenedor-izquierda, .contenedor-derecha {
@@ -291,8 +293,9 @@ body, html {
 #start-button {
     padding: 10px 20px;
     font-size: 1.2em;
-    background-color: #640D75;
-    color: white;
+    font-family: 'Sigmar';
+    background-color: blanchedalmond;
+    color: black;
     border: none;
     cursor: pointer;
 }
@@ -320,7 +323,7 @@ body, html {
 }
 
 .modal-content {
-    background: blanchedalmond;
+    background: white;
     padding: 20px;
     max-width: 400px;
     width: 90%;
