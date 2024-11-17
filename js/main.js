@@ -113,3 +113,27 @@ function adjustContentPadding() {
     const mainContent = document.querySelector(".main-content");
     mainContent.style.paddingTop = `${banner.offsetHeight}px`;
 }
+
+
+
+
+// ====== Animación al hacer scroll con Parallax ====== //
+function handleScrollAnimations() {
+    const hiddenElements = document.querySelectorAll('.hidden-container');
+
+    hiddenElements.forEach(element => {
+        const rect = element.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+        if (isVisible) {
+            element.classList.add('visible-container');
+            element.style.backgroundAttachment = 'fixed'; // Asegura el parallax
+        }
+    });
+}
+
+// Escucha el evento de scroll y ejecuta la función
+window.addEventListener('scroll', handleScrollAnimations);
+
+// Ejecuta la función al cargar la página para manejar elementos visibles iniciales
+document.addEventListener('DOMContentLoaded', handleScrollAnimations);

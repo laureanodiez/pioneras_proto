@@ -3,6 +3,8 @@ body, html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow-x: hidden; /* Elimina el desplazamiento horizontal */
+    max-width: 100%; /* Evita que el contenido se desborde */
 }
 
 /* Ajustar ancho de los contenedores principales */
@@ -225,10 +227,11 @@ body, html {
 }
 
 .right-text {
-    font-size: 20px;
+    font-size: 4vh;
     font-style: italic;
     color: #333;
     text-align: center;
+    margin: 10px;
 }
 
 /*
@@ -258,10 +261,20 @@ body, html {
 @media (max-width: 768px) {
     .contenedor-principal {
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        display: flex;
     }
     
-    .contenedor-izquierda, .contenedor-derecha {
+    .contenedor-principal .contenedor-izquierda, .contenedor-derecha {
         width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .contenedor-principal .contenedor-izquierda, .contenedor-derecha {
+        background-attachment: scroll; /* Cambiar a scroll en móviles */
+        background-position: center;  /* Asegura que la imagen se centre */
     }
 }
 
@@ -375,6 +388,12 @@ body, html {
     -webkit-text-stroke: 1px black;
 }
 
+@media (max-width: 768px) {
+    .parallax {
+        background-attachment: scroll; /* Cambiar a scroll en móviles */
+        background-position: center;  /* Asegura que la imagen se centre */
+    }
+}
 
 
 
@@ -416,4 +435,30 @@ body, html {
     background-color: white;
 }
 
+
+
+/* ====== Animación de Aparición con Parallax ====== */
+.hidden-container {
+    opacity: 0;
+    transform: translateY(50px); /* Desplaza el contenedor hacia abajo */
+    transition: opacity 0.8s ease, transform 0.8s ease; /* Suaviza la animación */
+}
+
+/* Visible mantiene el parallax intacto */
+.visible-container {
+    opacity: 1;
+    transform: translateY(0); /* Vuelve a la posición original */
+    background-attachment: fixed; /* Mantiene el parallax */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+/* Asegurar que el primer contenedor llene la pantalla */
+.contenedor-principal:first-of-type {
+    height: 100vh !important; /* Ocupa toda la altura de la pantalla */
+    display: flex;
+    justify-content: center;
+}
 
