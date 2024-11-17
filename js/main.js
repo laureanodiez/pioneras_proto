@@ -122,15 +122,41 @@ function handleScrollAnimations() {
     const hiddenElements = document.querySelectorAll('.hidden-container');
 
     hiddenElements.forEach(element => {
+        // Verifica si ya activó la transición
+        if (element.dataset.transitioned === 'true') {
+            return;
+        }
+
         const rect = element.getBoundingClientRect();
         const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
 
         if (isVisible) {
+            // Activa la transición y marca como "mostrado"
             element.classList.add('visible-container');
-            element.style.backgroundAttachment = 'fixed'; // Asegura el parallax
+            element.dataset.transitioned = 'true';
+            element.style.transition = 'opacity 1s ease-in-out';
+
+            // Solo aplica backgroundAttachment 'fixed' en pantallas grandes
+            if (window.innerWidth > 768) {
+                element.style.backgroundAttachment = 'fixed';
+            } else {
+                element.style.backgroundAttachment = 'scroll'; // Ajuste para pantallas pequeñas
+            }
         }
     });
 }
+
+window.addEventListener('resize', function() {
+    const hiddenElements = document.querySelectorAll('.hidden-container');
+    hiddenElements.forEach(element => {
+        if (window.innerWidth <= 768) {
+            element.style.backgroundAttachment = 'scroll';
+        } else {
+            element.style.backgroundAttachment = 'fixed';
+        }
+    });
+});
+
 
 // Escucha el evento de scroll y ejecuta la función
 window.addEventListener('scroll', handleScrollAnimations);

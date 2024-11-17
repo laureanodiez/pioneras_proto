@@ -438,21 +438,25 @@ body, html {
 
 
 /* ====== Animación de Aparición con Parallax ====== */
+/* Estado inicial de los contenedores */
 .hidden-container {
     opacity: 0;
-    transform: translateY(50px); /* Desplaza el contenedor hacia abajo */
-    transition: opacity 0.8s ease, transform 0.8s ease; /* Suaviza la animación */
+    transition: none; /* Sin transición inicial */
 }
 
-/* Visible mantiene el parallax intacto */
+/* Estado visible después de la transición */
 .visible-container {
     opacity: 1;
-    transform: translateY(0); /* Vuelve a la posición original */
-    background-attachment: fixed; /* Mantiene el parallax */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    transition: opacity 1s ease-in-out; /* Transición suave */
 }
+
+/* Configuración del parallax */
+.hidden-container {
+    background-attachment: scroll; /* Valor predeterminado */
+    background-size: cover;
+    background-position: center;
+}
+
 
 
 /* Asegurar que el primer contenedor llene la pantalla */
@@ -462,3 +466,9 @@ body, html {
     justify-content: center;
 }
 
+@media (max-width: 768px) {
+    .contenedor-principal .contenedor-izquierda, .contenedor-derecha {
+        background-attachment: scroll !important; /* Forzar scroll en móviles */
+        background-position: center !important;  /* Asegura que la imagen se centre */
+    }
+}
