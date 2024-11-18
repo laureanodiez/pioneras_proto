@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Experiencia de Realidad Aumentada</title>
+        <!-- A-Frame y AR.js -->
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>        
+    </head>
+
+    <body style="margin: 0; overflow: hidden;">
+
+
+        <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
+            <!-- Marcador personalizado -->
+            <a-marker type="pattern" url="./markers/pionera1pattern.patt" emitevents>
+                <a-box position="0 0.5 0" material="color: violet;"></a-box>
+            
+                <!-- Contenedor del recuadro de texto -->
+                <a-entity position="0 1 -2" look-at="[camera]">
+                <!-- Fondo del recuadro para el título -->
+                <a-plane color="#640D75" height="0.3" width="1.2" position="0 0.4 0"></a-plane>
+                <!-- Título en blanco -->
+                <a-text value="Pionera I" color="#FFFFFF" position="0 0.4 0.01" align="center" width="2"></a-text>
+                
+                <!-- Fondo del recuadro para el texto descriptivo -->
+                <a-plane color="#C8F29F" height="0.4" width="1.2" position="0 0 0"></a-plane>
+                <!-- Texto descriptivo en negro -->
+                <a-text value="Breve descripción inicial" color="#000000" position="0 0 0.01" align="center" width="1.8" wrap-count="25"></a-text>
+                </a-entity>
+
+                <!-- Partículas de nieve -->
+                <a-entity 
+                    particle-system="preset: snow; particleCount: 500; size: 0.1; velocityValue: 0 -1 0; color: #FFFFFF;" 
+                    position="0 2 -2">
+                </a-entity>
+            </a-marker>
+
+            <!-- Sonido -->
+            <a-entity sound="src: url('assets/sounds/snow-sound.mp3'); autoplay: false; loop: true;" id="snowSound"></a-entity>
+
+            <!-- Cámara y luz -->
+            <a-entity camera></a-entity>
+            <a-light type="ambient" color="#640D75"></a-light>
+        </a-scene>
+
+        <script>
+            // Variables para controlar el sonido
+            const marker = document.querySelector("a-marker");
+            const soundEntity = document.querySelector("#snowSound");
+            let soundPlayed = false;
+
+            // Evento para detectar cuando el marcador aparece
+            marker.addEventListener("markerFound", () => {
+                if (!soundPlayed) {
+                    soundEntity.components.sound.playSound();
+                    soundPlayed = true; // Solo permite reproducir una vez
+                }
+            });
+        </script>
+
+   
+            
+    </body>
+</html>
