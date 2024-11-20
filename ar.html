@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Tutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Experiencia Interactiva AR</title>
+    <!-- A-Frame y AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/2.2.1/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
     <style>
         body {
@@ -91,7 +92,7 @@
         }
     </style>
 </head>
-<body>
+<body style="margin: 0; overflow: hidden;">
     <div id="header">
         <a href="index.html" target="">
             <h1>Pioneras</h1>
@@ -114,10 +115,7 @@
         <!-- Nieve/ventisca localizada cerca del marcador -->
         <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5"
                   position="0 0.5 -0.5" id="snow" visible="true"></a-entity>
-    
-        <!-- Marcador -->
         <a-marker type="pattern" url="markers/pattern-pionera1.patt" id="marker">
-            <!-- Recuadro 3D flotante con preguntas -->
             <a-box id="question-box" position="0 0.5 0" rotation="-90" depth="0.1" height="1" width="2" 
                    color="#333333" material="opacity: 0.8;" visible="true">
                 <a-text id="question-text" value="Pregunta aquí" position="0 0.3 0.06" align="center" color="white" width="1.8"></a-text>
@@ -128,17 +126,72 @@
             </a-box>
         </a-marker>
     
-        <!-- Cámara -->
         <a-entity camera>
             <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
-          </a-entity>
-          
+        </a-entity>
     </a-scene>    
 
     <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
 
-
     <script>
+        const questions = [
+            { question: "¿Cuál es la capital de Francia?", answers: ["París", "Roma"], correct: 0 },
+            { question: "¿Qué planeta es conocido como el Planeta Rojo?", answers: ["Marte", "Venus"], correct: 0 },
+            { question: "¿Cuántos continentes hay en el mundo?", answers: ["5", "7"], correct: 1 },
+            { question: "¿Cuál es el océano más grande?", answers: ["Atlántico", "Pacífico"], correct: 1 },
+            { question: "¿En qué país está la Torre de Pisa?", answers: ["Italia", "España"], correct: 0 }
+        ];
+
+        let currentQuestion = 0;
+        const questionText = document.getElementById('question-text');
+        const answer1 = document.getElementById('answer-1');
+        const answer2 = document.getElementById('answer-2');
+        const stamp = document.getElementById('stamp');
+        const snow = document.getElementById('snow');
+        const windSound = document.getElementById('wind-sound');
+        const questionBox = document.getElementById('question-box');
+        const marker = document.getElementById('marker');
+
+        function showStamp() {
+            stamp.setAttribute('visible', true);
+            stamp.emit('show-stamp');
+            setTimeout(() => stamp.emit('fly-stamp'), 1000);
+        }
+
+        function updateQuestion() {
+            const q = questions[currentQuestion];
+            questionText.setAttribute('value', q.question);
+            answer1.setAttribute('text', `value: ${q.answers[0]}; align: center; color: white;`);
+            answer2.setAttribute('text', `value: ${q.answers[1]}; align: center; color: white;`);
+        }
+
+        function handleAnswer(index) {
+            const correct = questions[currentQuestion].correct === index;
+            if (correct) {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    updateQuestion();
+                } else {
+                    questionBox.setAttribute('visible', false);
+                    showStamp();
+                }
+            }
+        }
+
+        answer1.addEventListener('click', () => handleAnswer(0));
+        answer2.addEventListener('click', () => handleAnswer(1));
+
+        marker.addEventListener('markerFound', () => {
+            questionBox.setAttribute('visible', true);
+            updateQuestion();
+        });
+
+        window.addEventListener('click', () => {
+            if (windSound.paused) {
+                windSound.play();
+            }
+        });
+
         const tutorialSteps = [
             { title: "Bienvenido", text: "Bienvenido a la experiencia RA. Haz clic en 'Continuar' para comenzar." },
             { title: "Cómo usar", text: "Enfoca el marcador para iniciar la experiencia." },
@@ -174,72 +227,6 @@
 
         modal.style.display = "flex"; // Show modal on load
         showTutorialStep();
-
-
-        
-        const questions = [
-            { question: "¿Cuál es la capital de Francia?", answers: ["París", "Roma"], correct: 0 },
-            { question: "¿Qué planeta es conocido como el Planeta Rojo?", answers: ["Marte", "Venus"], correct: 0 },
-            { question: "¿Cuántos continentes hay en el mundo?", answers: ["5", "7"], correct: 1 },
-            { question: "¿Cuál es el océano más grande?", answers: ["Atlántico", "Pacífico"], correct: 1 },
-            { question: "¿En qué país está la Torre de Pisa?", answers: ["Italia", "España"], correct: 0 }
-        ];
-
-        let currentQuestion = 0;
-        const questionText = document.getElementById('question-text');
-        const answer1 = document.getElementById('answer-1');
-        const answer2 = document.getElementById('answer-2');
-        const stamp = document.getElementById('stamp');
-        const snow = document.getElementById('snow');
-        const windSound = document.getElementById('wind-sound');
-        const questionBox = document.getElementById('question-box');
-        const marker = document.getElementById('marker');
-
-        // Función para mostrar la estampilla con animaciones
-        function showStamp() {
-            stamp.setAttribute('visible', true);
-            stamp.emit('show-stamp');
-            setTimeout(() => stamp.emit('fly-stamp'), 1000);
-        }
-
-        // Actualizar pregunta
-        function updateQuestion() {
-            const q = questions[currentQuestion];
-            questionText.setAttribute('value', q.question);
-            answer1.setAttribute('text', `value: ${q.answers[0]}; align: center; color: white;`);
-            answer2.setAttribute('text', `value: ${q.answers[1]}; align: center; color: white;`);
-        }
-
-        // Evento para manejar las respuestas
-        function handleAnswer(index) {
-            const correct = questions[currentQuestion].correct === index;
-            if (correct) {
-                currentQuestion++;
-                if (currentQuestion < questions.length) {
-                    updateQuestion();
-                } else {
-                    questionBox.setAttribute('visible', false);
-                    showStamp();
-                }
-            }
-        }
-
-        // Listeners para botones
-        answer1.addEventListener('click', () => handleAnswer(0));
-        answer2.addEventListener('click', () => handleAnswer(1));
-
-        // Mostrar el recuadro al detectar el marcador
-        marker.addEventListener('markerFound', () => {
-            questionBox.setAttribute('visible', true);
-            updateQuestion();
-        });
-
-        // Fade-in para el sonido
-        window.addEventListener('click', () => {
-            if (windSound.paused) {
-                windSound.play();
-            }
-        });
     </script>
 </body>
 </html>
