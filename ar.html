@@ -114,14 +114,14 @@
     <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
         <!-- Nieve/ventisca localizada cerca del marcador -->
         <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5"
-                  position="0 0.5 -0.5" id="snow" visible="true"></a-entity>
+                  position="0 0 0" id="snow" visible="true"></a-entity>
         <a-marker type="pattern" url="markers/pattern-pionera1.patt" id="marker">
             <a-box id="question-box" position="0 0.5 0" rotation="-90" depth="0.1" height="1" width="2" 
-                   color="#333333" material="opacity: 0.8;" visible="true">
+                   color="#fff" material="opacity: 0.8;" visible="true">
                 <a-text id="question-text" value="Pregunta aquí" position="0 0.3 0.06" align="center" color="white" width="1.8"></a-text>
-                <a-plane id="answer-1" color="#FF5733" height="0.3" width="1.8" position="0 0.1 0.06"
+                <a-plane id="answer-1" color="#8A47A3" height="0.3" width="1.8" position="0 0.1 0.06"
                          text="value: Respuesta 1; align: center; color: white;" class="clickable"></a-plane>
-                <a-plane id="answer-2" color="#FF5733" height="0.3" width="1.8" position="0 -0.2 0.06"
+                <a-plane id="answer-2" color="#8A47A3" height="0.3" width="1.8" position="0 -0.2 0.06"
                          text="value: Respuesta 2; align: center; color: white;" class="clickable"></a-plane>
             </a-box>
         </a-marker>
