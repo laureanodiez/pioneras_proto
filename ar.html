@@ -165,7 +165,7 @@
             const imageBottom = document.querySelector('#image-bottom');
             const mainImage = document.querySelector('#main-image');
 
-            function showAdditionalImages() {
+            const showAdditionalImages = () => {
             // Update visibility and add animation
             [imageRight, imageLeft, imageBottom].forEach((image, index) => {
                 image.setAttribute('visible', 'true');
@@ -181,6 +181,7 @@
             
             mainImage.addEventListener('click', () => {
                 showAdditionalImages();
+                
             });
 
             // Obtiene referencias a elementos HTML por su ID. const: declara constantes. document.getElementById: busca un elemento por su ID.
