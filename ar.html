@@ -1,232 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Experiencia Interactiva AR</title>
-    <!-- A-Frame y AR.js -->
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        #header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: #C8F29F;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        #header h1 {
-            font-family: 'Sigmar', cursive;
-            font-size: 1.5rem;
-            color: #640D75;
-            margin: 0;
-        }
-        #header .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        #header .user-info .badge-icon {
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        #header .user-info .username {
-            background-color: #E8F8D9;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            color: #640D75;
-        }
-        #modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 20;
-            display: none;
-        }
-        #modal .modal-content {
-            background-color: #FDFBF6;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        #modal .modal-content h2 {
-            margin: 0 0 10px;
-            color: #640D75;
-        }
-        #modal .modal-content p {
-            margin: 0 0 20px;
-            color: #333;
-        }
-        #modal .modal-content button {
-            background-color: #640D75;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        #modal .modal-content button:hover {
-            background-color: #8A47A3;
-        }
-    </style>
-</head>
-<body style="margin: 0; overflow: hidden;">
-    <div id="header">
-        <a href="index.html" target="">
-            <h1>Pioneras</h1>
-        </a>
-        <div class="user-info">
-            <span class="badge-icon">🏅</span>
-            <div class="username">Usuario</div>
-        </div>
-    </div>
-
-    <div id="modal">
-        <div class="modal-content">
-            <h2 id="tutorial-title">Bienvenido</h2>
-            <p id="tutorial-text">Bienvenido a la experiencia RA. Haz clic en "Continuar" para comenzar.</p>
-            <button id="tutorial-next">Continuar</button>
-        </div>
-    </div>
-
-    <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
-        <!-- Nieve/ventisca localizada cerca del marcador -->
-        <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5"
-                  position="0 0 0" id="snow" visible="true"></a-entity>
-        <a-marker type="pattern" url="markers/pattern-pionera1.patt" id="marker">
-            <a-box id="question-box" position="0 0.5 0" rotation="-90" depth="0.1" height="1" width="2" 
-                   color="#fff" material="opacity: 0.8;" visible="true">
-                <a-text id="question-text" value="Pregunta aquí" position="0 0.3 0.06" align="center" color="white" width="1.8"></a-text>
-                <a-plane id="answer-1" color="#8A47A3" height="0.3" width="1.8" position="0 0.1 0.06"
-                         text="value: Respuesta 1; align: center; color: white;" class="clickable"></a-plane>
-                <a-plane id="answer-2" color="#8A47A3" height="0.3" width="1.8" position="0 -0.2 0.06"
-                         text="value: Respuesta 2; align: center; color: white;" class="clickable"></a-plane>
-            </a-box>
-        </a-marker>
-    
-        <a-entity camera>
-            <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
-        </a-entity>
-    </a-scene>    
-
-    <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
-
-    <script>
-        const questions = [
-            { question: "¿Cuál es la capital de Francia?", answers: ["París", "Roma"], correct: 0 },
-            { question: "¿Qué planeta es conocido como el Planeta Rojo?", answers: ["Marte", "Venus"], correct: 0 },
-            { question: "¿Cuántos continentes hay en el mundo?", answers: ["5", "7"], correct: 1 },
-            { question: "¿Cuál es el océano más grande?", answers: ["Atlántico", "Pacífico"], correct: 1 },
-            { question: "¿En qué país está la Torre de Pisa?", answers: ["Italia", "España"], correct: 0 }
-        ];
-
-        let currentQuestion = 0;
-        const questionText = document.getElementById('question-text');
-        const answer1 = document.getElementById('answer-1');
-        const answer2 = document.getElementById('answer-2');
-        const stamp = document.getElementById('stamp');
-        const snow = document.getElementById('snow');
-        const windSound = document.getElementById('wind-sound');
-        const questionBox = document.getElementById('question-box');
-        const marker = document.getElementById('marker');
-
-        function showStamp() {
-            stamp.setAttribute('visible', true);
-            stamp.emit('show-stamp');
-            setTimeout(() => stamp.emit('fly-stamp'), 1000);
-        }
-
-        function updateQuestion() {
-            const q = questions[currentQuestion];
-            questionText.setAttribute('value', q.question);
-            answer1.setAttribute('text', `value: ${q.answers[0]}; align: center; color: white;`);
-            answer2.setAttribute('text', `value: ${q.answers[1]}; align: center; color: white;`);
-        }
-
-        function handleAnswer(index) {
-            const correct = questions[currentQuestion].correct === index;
-            if (correct) {
-                currentQuestion++;
-                if (currentQuestion < questions.length) {
-                    updateQuestion();
-                } else {
-                    questionBox.setAttribute('visible', false);
-                    showStamp();
-                }
-            }
-        }
-
-        answer1.addEventListener('click', () => handleAnswer(0));
-        answer2.addEventListener('click', () => handleAnswer(1));
-
-        marker.addEventListener('markerFound', () => {
-            questionBox.setAttribute('visible', true);
-            updateQuestion();
-        });
-
-        window.addEventListener('click', () => {
-            if (windSound.paused) {
-                windSound.play();
-            }
-        });
-
-        const tutorialSteps = [
-            { title: "Bienvenido", text: "Bienvenido a la experiencia RA. Haz clic en 'Continuar' para comenzar." },
-            { title: "Cómo usar", text: "Enfoca el marcador para iniciar la experiencia." },
-            { title: "Insignias", text: "Gana insignias respondiendo correctamente las preguntas." },
-            { title: "Más información", text: "Haz clic en 'PIONERAS' en el header para más información." }
-        ];
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <title>Experiencia Interactiva AR</title>
+        <!-- A-Frame y AR.js -->
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
         
-        let currentStep = 0;
-        const modal = document.getElementById("modal");
-        const tutorialTitle = document.getElementById("tutorial-title");
-        const tutorialText = document.getElementById("tutorial-text");
-        const tutorialNext = document.getElementById("tutorial-next");
-
-        const showTutorialStep = () => {
-            const step = tutorialSteps[currentStep];
-            tutorialTitle.textContent = step.title;
-            tutorialText.textContent = step.text;
-            if (currentStep === tutorialSteps.length - 1) {
-                tutorialNext.textContent = "Finalizar";
-            } else {
-                tutorialNext.textContent = "Continuar";
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
             }
-        };
-
-        tutorialNext.addEventListener("click", () => {
-            currentStep++;
-            if (currentStep < tutorialSteps.length) {
-                showTutorialStep();
-            } else {
-                modal.style.display = "none";
+            #header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #C8F29F;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 20px;
+                z-index: 10;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             }
-        });
+            #header h1 {
+                font-family: 'Sigmar', cursive;
+                font-size: 1.5rem;
+                color: #640D75;
+                margin: 0;
+            }
+            #header .user-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            #header .user-info .badge-icon {
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            #header .user-info .username {
+                background-color: #E8F8D9;
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-weight: bold;
+                color: #640D75;
+            }
+            #modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 20;
+                display: none;
+            }
+            #modal .modal-content {
+                background-color: #FDFBF6;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                max-width: 400px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+            #modal .modal-content h2 {
+                margin: 0 0 10px;
+                color: #640D75;
+            }
+            #modal .modal-content p {
+                margin: 0 0 20px;
+                color: #333;
+            }
+            #modal .modal-content button {
+                background-color: #640D75;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+            #modal .modal-content button:hover {
+                background-color: #8A47A3;
+            }
+        </style>
+        
+    </head>
+    
+    <body style="margin: 0; overflow: hidden;">
+        <div id="header">
+            <a href="index.html" target="">
+                <h1>Pioneras</h1>
+            </a>
+            <div class="user-info">
+                <span class="badge-icon">🏅</span>
+                <div class="username">Usuario</div>
+            </div>
+        </div>
 
-        modal.style.display = "flex"; // Show modal on load
-        showTutorialStep();
-    </script>
-</body>
+        <div id="modal">
+            <div class="modal-content">
+                <h2 id="tutorial-title">Bienvenido</h2>
+                <p id="tutorial-text">Bienvenido a la experiencia RA. Haz clic en "Continuar" para comenzar.</p>
+                <button id="tutorial-next">Continuar</button>
+            </div>
+        </div>
+
+        <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
+            <!-- Nieve/ventisca localizada cerca del marcador -->
+            <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5"
+                    position="0 0 0" id="snow" visible="true"></a-entity>
+                    <a-marker type="pattern" url="markers/pattern-pionera1.patt" id="marker">
+                        <!-- Main image -->
+                        <a-entity id="marker-content"></a-entity>
+                        <a-image id="main-image" 
+                            src="assets/decor/pionera1.jpeg" 
+                            position="0 0 0" 
+                            rotation="-90 0 0"
+                            scale="1 1 1" 
+                            animation="property: scale; to: 1.2 1.2 1.2; loop: true; dur: 1000; dir: alternate"
+                            class="clickable">
+                        </a-image>
+                
+                
+                        <!-- Additional images (initially hidden) -->
+                        <a-image id="image-right" 
+                                src="assets/stamp1-gray.jpg" 
+                                position="1 0 0" 
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"></a-image>
+                        <a-image id="image-left" 
+                                src="assets/stamp2-gray.jpg" 
+                                position="-1 0 0" 
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"></a-image>
+                        <a-image id="image-bottom" 
+                                src="assets/stamp3-gray.jpg"  
+                                position="0 0 1" 
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"></a-image>
+                    </a-marker>
+        
+            <a-entity camera>
+                <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
+            </a-entity>
+          </a-scene>
+        <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
+
+        <script>
+            // Function to reveal additional images
+            const imageRight = document.querySelector('#image-right');
+            const imageLeft = document.querySelector('#image-left');
+            const imageBottom = document.querySelector('#image-bottom');
+            const mainImage = document.querySelector('#main-image');
+
+            function showAdditionalImages() {
+            // Update visibility and add animation
+            [imageRight, imageLeft, imageBottom].forEach((image, index) => {
+                image.setAttribute('visible', 'true');
+                image.setAttribute('animation', `
+                property: scale; 
+                to: 0.5 0.5 0.5; 
+                dur: 500; 
+                easing: easeInOutQuad; 
+                delay: ${index * 200}
+                `);
+            });
+            }
+            
+            mainImage.addEventListener('click', () => {
+                showAdditionalImages();
+            });
+
+            // Obtiene referencias a elementos HTML por su ID. const: declara constantes. document.getElementById: busca un elemento por su ID.
+            const snow = document.getElementById('snow'); // Elemento para efectos de nieve.
+            const windSound = document.getElementById('wind-sound'); // Elemento de audio para sonido del viento.
+            const marker = document.getElementById('marker'); // Marcador para interacción de realidad aumentada.
+        
+            // Reproduce el sonido del viento al hacer clic en la ventana. addEventListener: agrega un oyente de eventos. click: tipo de evento.
+            window.addEventListener('markerFound', () => {
+                if (windSound.paused) { // Si el sonido está pausado...
+                    windSound.play(); // Lo reproduce. play: método para reproducir audio.
+                }
+            });
+        
+            // Define pasos para un tutorial. const: declara una constante. tutorialSteps: nombre de la constante.
+            const tutorialSteps = [
+                { title: "Bienvenido", text: "Bienvenido a la experiencia RA. Haz clic en 'Continuar' para comenzar." }, // Paso 1. title: título del paso. text: descripción del paso.
+                { title: "Cómo usar", text: "Enfoca el marcador para iniciar la experiencia." }, // Paso 2.
+                { title: "Insignias", text: "Gana insignias respondiendo correctamente las preguntas." }, // Paso 3.
+                { title: "Más información", text: "Haz clic en 'PIONERAS' en el header para más información." } // Paso 4.
+            ];
+        
+            // Inicializa variables para el tutorial. let: declara variables que se pueden reasignar. currentStep: índice del paso actual.
+            let currentStep = 0;
+        
+            // Obtiene referencias a elementos del tutorial. const: declara constantes. document.getElementById: busca elementos por su ID.
+            const modal = document.getElementById("modal"); // Modal que contiene el tutorial.
+            const tutorialTitle = document.getElementById("tutorial-title"); // Título del tutorial.
+            const tutorialText = document.getElementById("tutorial-text"); // Texto descriptivo del tutorial.
+            const tutorialNext = document.getElementById("tutorial-next"); // Botón para avanzar en el tutorial.
+        
+            // Muestra el paso actual del tutorial. const: declara constante. showTutorialStep: nombre de la función.
+            const showTutorialStep = () => {
+                const step = tutorialSteps[currentStep]; // Obtiene el paso actual. step: variable local.
+                tutorialTitle.textContent = step.title; // Establece el título del paso. textContent: asigna texto al elemento.
+                tutorialText.textContent = step.text; // Establece el texto descriptivo.
+                if (currentStep === tutorialSteps.length - 1) { // Si es el último paso...
+                    tutorialNext.textContent = "Finalizar"; // Cambia el texto del botón a 'Finalizar'.
+                } else { // Si no es el último paso...
+                    tutorialNext.textContent = "Continuar"; // Cambia el texto del botón a 'Continuar'.
+                }
+            };
+        
+            // Agrega evento para avanzar en el tutorial. addEventListener: agrega un oyente de eventos. click: tipo de evento.
+            tutorialNext.addEventListener("click", () => {
+                currentStep++; // Avanza al siguiente paso.
+                if (currentStep < tutorialSteps.length) { // Si hay más pasos...
+                    showTutorialStep(); // Muestra el siguiente paso.
+                } else { // Si no hay más pasos...
+                    modal.style.display = "none"; // Oculta el modal.
+                }
+            });
+        
+            modal.style.display = "flex"; // Muestra el modal al cargar. style.display: modifica el estilo CSS.
+            showTutorialStep(); // Muestra el primer paso del tutorial.
+        </script>
+        
+    </body>
 </html>
