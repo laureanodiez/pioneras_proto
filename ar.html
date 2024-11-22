@@ -116,8 +116,7 @@
 
         <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
             <!-- Nieve/ventisca localizada cerca del marcador -->
-            <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5"
-                    position="0 0 0" id="snow" visible="true"></a-entity>
+            <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5" position="0 0 -1" id="snow" visible="true"></a-entity>
                     <a-marker type="pattern" url="markers/pattern-pionera1.patt" id="marker">
                         <!-- Main image -->
                         <a-entity id="marker-content"></a-entity>
@@ -137,24 +136,33 @@
                                 position="1 0 0" 
                                 scale="0 0 0" 
                                 rotation="-90 0 0"
-                                visible="false"></a-image>
+                                visible="false"
+                                class="clickable">
+                        </a-image>
                         <a-image id="image-left" 
                                 src="assets/stamp2-gray.jpg" 
                                 position="-1 0 0" 
                                 scale="0 0 0" 
                                 rotation="-90 0 0"
-                                visible="false"></a-image>
+                                visible="false"
+                                class="clickable">
+                        </a-image>
                         <a-image id="image-bottom" 
                                 src="assets/stamp3-gray.jpg"  
                                 position="0 0 1" 
                                 scale="0 0 0" 
                                 rotation="-90 0 0"
-                                visible="false"></a-image>
+                                visible="false"
+                                class="clickable">
+                        </a-image>
                     </a-marker>
         
             <a-entity camera>
                 <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
             </a-entity>
+            <a-entity id="container1" position="0.5 0 0" visible="false"></a-entity>
+            <a-entity id="container2" position="0.5 0 0" visible="false"></a-entity>
+            <a-entity id="container3" position="0.5 0 0" visible="false"></a-entity>
           </a-scene>
         <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
 
@@ -165,8 +173,13 @@
             const imageBottom = document.querySelector('#image-bottom');
             const mainImage = document.querySelector('#main-image');
 
+            // Contenedores escalonados
+            const container1 = document.querySelector('#container1');
+            const container2 = document.querySelector('#container2');
+            const container3 = document.querySelector('#container3');
+
+            // Show additional images with animation
             const showAdditionalImages = () => {
-            // Update visibility and add animation
             [imageRight, imageLeft, imageBottom].forEach((image, index) => {
                 image.setAttribute('visible', 'true');
                 image.setAttribute('animation', `
@@ -177,12 +190,74 @@
                 delay: ${index * 200}
                 `);
             });
-            }
-            
+            };
+
             mainImage.addEventListener('click', () => {
-                showAdditionalImages();
-                
+            showAdditionalImages();
             });
+
+            // Function to handle stamp selection
+            const selectStamp = (selectedImage) => {
+            // Hide main image and non-selected stamps
+                [mainImage, imageRight, imageLeft, imageBottom].forEach((image) => {
+                    if (image !== selectedImage) {
+                    image.setAttribute('animation', `
+                        property: opacity;
+                        to: 0;
+                        dur: 500;
+                        easing: easeInOutQuad;
+                    `);
+                    setTimeout(() => {
+                        image.setAttribute('visible', 'false');
+                    }, 500); // Hide after animation ends
+                    }
+            });
+
+            // Enlarge and center the selected stamp
+            selectedImage.setAttribute('animation', `
+                property: scale;
+                to: 0.75 0.75 0.75;
+                dur: 500;
+                easing: easeInOutQuad;
+            `);
+
+            selectedImage.setAttribute('animation__position', `
+                property: position;
+                to: 0 0 0;
+                dur: 500;
+                easing: easeInOutQuad;
+            `);
+
+            // After 2 seconds, move stamp left and show containers
+            setTimeout(() => {
+                selectedImage.setAttribute('animation', `
+                property: position;
+                to: -0.5 0 0;
+                dur: 500;
+                easing: easeInOutQuad;
+                `);
+
+                // Show containers with staggered animation
+                [container1, container2, container3].forEach((container, index) => {
+                container.setAttribute('visible', 'true');
+                container.setAttribute('animation', `
+                    property: position;
+                    to: 0.5 0 0;
+                    dur: 500;
+                    easing: easeInOutQuad;
+                    delay: ${index * 200};
+                `);
+                });
+            }, 500); // Wait 2 seconds before moving and showing containers
+            };
+
+            // Add click listeners for the stamps
+            [imageRight, imageLeft, imageBottom].forEach((image) => {
+            image.addEventListener('click', () => {
+                selectStamp(image);
+            });
+            });
+
 
             // Obtiene referencias a elementos HTML por su ID. const: declara constantes. document.getElementById: busca un elemento por su ID.
             const snow = document.getElementById('snow'); // Elemento para efectos de nieve.
