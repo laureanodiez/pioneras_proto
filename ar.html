@@ -131,25 +131,58 @@
                 
                 
                         <!-- Additional images (initially hidden) -->
-                        <a-image id="image-right" 
-                                src="assets/stamp1-gray.jpg" 
+                        <a-image id="estampilla-pio-centro" 
+                                src="assets/RA/ESTAMPILLA 3.png" 
                                 position="1 0 0" 
                                 scale="0 0 0" 
                                 rotation="-90 0 0"
                                 visible="false"
                                 class="clickable">
                         </a-image>
-                        <a-image id="image-left" 
-                                src="assets/stamp2-gray.jpg" 
-                                position="-1 0 0" 
+                        <a-image id="estampilla-ara-derecha" 
+                                src="assets/RA/ESTAMPILLA 2.png"  
+                                position="1 0 0"
                                 scale="0 0 0" 
                                 rotation="-90 0 0"
                                 visible="false"
                                 class="clickable">
                         </a-image>
-                        <a-image id="image-bottom" 
-                                src="assets/stamp3-gray.jpg"  
-                                position="0 0 1" 
+                        <a-image id="estampilla-ant-izquierda" 
+                                src="assets/RA/ESTAMPILLA 1.png"  
+                                position="-1 0 0"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="estampilla-rrii-abajo" 
+                                src="assets/RA/ESTAMPILLA 4.png"  
+                                position="0 0 1"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+
+                        <a-image id="contenedor-pio-centro-1" 
+                                src="assets/RA/contenedor-pio-centro-3.png"  
+                                position="0.5 0 0"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-pio-centro-2" 
+                                src="assets/RA/contenedor-pio-centro-2.png"  
+                                position="0.6 0.1 0.1"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-pio-centro-3" 
+                                src="assets/RA/contenedor-pio-centro-1.png"  
+                                position="0.7 0.2 0.2"
                                 scale="0 0 0" 
                                 rotation="-90 0 0"
                                 visible="false"
@@ -160,23 +193,27 @@
             <a-entity camera>
                 <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
             </a-entity>
-            <a-entity id="container1" position="0.5 0 0" visible="false"></a-entity>
-            <a-entity id="container2" position="0.5 0 0" visible="false"></a-entity>
-            <a-entity id="container3" position="0.5 0 0" visible="false"></a-entity>
+
           </a-scene>
         <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
 
         <script>
             // Function to reveal additional images
-            const imageRight = document.querySelector('#image-right');
-            const imageLeft = document.querySelector('#image-left');
-            const imageBottom = document.querySelector('#image-bottom');
+            const imageRight = document.querySelector('#estampilla-ara-derecha');
+            const imageLeft = document.querySelector('#estampilla-ant-izquierda');
+            const imageBottom = document.querySelector('#estampilla-rrii-abajo');
             const mainImage = document.querySelector('#main-image');
+            
+            const positionsEst = {
+                left: "-1 0 0",
+                right: "1 0 0",
+                bottom: "0 0 1",
+            };
 
             // Contenedores escalonados
-            const container1 = document.querySelector('#container1');
-            const container2 = document.querySelector('#container2');
-            const container3 = document.querySelector('#container3');
+            const container1 = document.querySelector('#contenedor-pio-centro-1');
+            const container2 = document.querySelector('#contenedor-pio-centro-2');
+            const container3 = document.querySelector('#contenedor-pio-centro-3');
 
             // Show additional images with animation
             const showAdditionalImages = () => {
@@ -184,7 +221,7 @@
                 image.setAttribute('visible', 'true');
                 image.setAttribute('animation', `
                 property: scale; 
-                to: 0.5 0.5 0.5; 
+                to: 0.75 0.75 0.75; 
                 dur: 500; 
                 easing: easeInOutQuad; 
                 delay: ${index * 200}
@@ -196,9 +233,87 @@
             showAdditionalImages();
             });
 
-            // Function to handle stamp selection
-            const selectStamp = (selectedImage) => {
-            // Hide main image and non-selected stamps
+            // Track the selected stamp
+            let selectedStamp = null;
+
+            const resetStamps = () => {
+                if (!selectedStamp) return; // Si no hay una estampilla seleccionada, salir.
+
+                // Determina la posición original de la estampilla seleccionada
+                const selectedKey = selectedStamp === imageLeft ? "left"
+                                : selectedStamp === imageRight ? "right"
+                                : "bottom"; // Identifica si es izquierda, derecha o abajo
+                const originalPosition = positionsEst[selectedKey];
+
+                // Oculta los contenedores
+                [container1, container2, container3].forEach((container, index) => {
+                    container.setAttribute('animation', `
+                        property: scale; 
+                        to: 0 0 0; 
+                        dur: 500; 
+                        easing: easeInOutQuad; 
+                        delay: ${index * 200}
+                    `);
+                    setTimeout(() => {
+                        container.setAttribute('visible', 'false');
+                    }, 500);
+                });
+
+                // Animación para devolver la estampilla seleccionada a su posición original
+                selectedStamp.setAttribute('animation__scale', `
+                    property: scale;
+                    to: 0.75 0.75 0.75;
+                    dur: 500;
+                    easing: easeInOutQuad;
+                `);
+
+                selectedStamp.setAttribute('animation__position', `
+                    property: position;
+                    to: ${originalPosition};
+                    dur: 500;
+                    easing: easeInOutQuad;
+                `);
+
+                // Restaura las otras estampillas
+                [mainImage, imageRight, imageLeft, imageBottom].forEach((image) => {
+                    if (image !== selectedStamp) {
+                        image.setAttribute('visible', 'true');
+                        image.setAttribute('animation', `
+                            property: opacity;
+                            to: 1;
+                            dur: 500;
+                            easing: easeInOutQuad;
+                        `);
+                        /*mainImage.setAttribute('animation', `
+                            property: scale; 
+                            to: 1.2 1.2 1.2; 
+                            loop: true; 
+                            dur: 1000; 
+                            dir: alternate"
+                        `);*/
+                    }
+                });
+
+                // Reinicia el estado
+                selectedStamp = null;
+            };
+
+
+
+            // Function to handle stamp selection and toggling
+            const selectOrDeselectStamp = (clickedStamp) => {
+                if (selectedStamp === clickedStamp) {
+                    // If the clicked stamp is already selected, reverse the animation
+                    resetStamps();
+                } else {
+                    // If a different stamp is selected or none is selected, proceed with selection
+                    selectStamp(clickedStamp);
+                    selectedStamp = clickedStamp;
+                }
+                };
+
+                // Function to handle stamp selection
+                const selectStamp = (selectedImage) => {
                 [mainImage, imageRight, imageLeft, imageBottom].forEach((image) => {
                     if (image !== selectedImage) {
                     image.setAttribute('animation', `
@@ -211,52 +326,112 @@
                         image.setAttribute('visible', 'false');
                     }, 500); // Hide after animation ends
                     }
-            });
+                });
 
-            // Enlarge and center the selected stamp
-            selectedImage.setAttribute('animation', `
-                property: scale;
-                to: 0.75 0.75 0.75;
-                dur: 500;
-                easing: easeInOutQuad;
-            `);
-
-            selectedImage.setAttribute('animation__position', `
-                property: position;
-                to: 0 0 0;
-                dur: 500;
-                easing: easeInOutQuad;
-            `);
-
-            // After 2 seconds, move stamp left and show containers
-            setTimeout(() => {
                 selectedImage.setAttribute('animation', `
-                property: position;
-                to: -0.5 0 0;
-                dur: 500;
-                easing: easeInOutQuad;
-                `);
-
-                // Show containers with staggered animation
-                [container1, container2, container3].forEach((container, index) => {
-                container.setAttribute('visible', 'true');
-                container.setAttribute('animation', `
-                    property: position;
-                    to: 0.5 0 0;
+                    property: scale;
+                    to: 1 1 1;
                     dur: 500;
                     easing: easeInOutQuad;
-                    delay: ${index * 200};
                 `);
-                });
-            }, 500); // Wait 2 seconds before moving and showing containers
+
+                selectedImage.setAttribute('animation__position', `
+                    property: position;
+                    to: 0 0 0;
+                    dur: 500;
+                    easing: easeInOutQuad;
+                `);
+
+                setTimeout(() => {
+                    setTimeout(() => {
+                        selectedImage.setAttribute('animation', `
+                            property: position;
+                            to: -0.5 0 0;
+                            dur: 1000;
+                            easing: easeInOutQuad;
+                            `);
+                    }, 0);
+
+                    [container1, container2, container3].forEach((container, index) => {
+                        setTimeout(() => {
+                    
+                            container.setAttribute('visible', 'true');
+                            container.setAttribute('animation', `
+                                property: scale; 
+                                to: 1 1 1; 
+                                dur: 500; 
+                                easing: easeInOutQuad; 
+                                delay: ${index * 200}
+                            `);
+                        }, 1000);
+                    });
+                }, 2000); // Wait 2 seconds before moving and showing containers
             };
 
-            // Add click listeners for the stamps
+            // Update the click listeners for the stamps
             [imageRight, imageLeft, imageBottom].forEach((image) => {
             image.addEventListener('click', () => {
-                selectStamp(image);
+                selectOrDeselectStamp(image);
             });
             });
+
+            
+
+            // Lista de contenedores
+            let containers = [container1, container2, container3];
+
+            // Posiciones iniciales
+            const positions = {
+            last: "0.5 0 0",
+            middle: "0.6 0.1 0.1",
+            first: "0.7 0.2 0.2",
+            };
+
+            // Función para rotar contenedores
+            const rotateContainers = (clickedContainer) => {
+            // Identificar el índice del contenedor clickeado
+            const clickedIndex = containers.indexOf(clickedContainer);
+
+            // Reorganizar el orden de los contenedores según el clic
+            const newOrder = [
+                containers[(clickedIndex + 1) % 3], // El siguiente se convierte en el primero
+                containers[(clickedIndex + 2) % 3], // El último se convierte en el del medio
+                containers[clickedIndex],           // El clickeado se convierte en el último
+            ];
+
+            // Actualizar la lista de contenedores con el nuevo orden
+            containers = newOrder;
+
+            // Asignar las nuevas posiciones con animaciones
+            containers[0].setAttribute('animation', `
+                property: position; 
+                to: ${positions.first}; 
+                dur: 500; 
+                easing: easeInOutQuad;
+            `);
+
+            containers[1].setAttribute('animation', `
+                property: position; 
+                to: ${positions.middle}; 
+                dur: 500; 
+                easing: easeInOutQuad;
+            `);
+
+            containers[2].setAttribute('animation', `
+                property: position; 
+                to: ${positions.last}; 
+                dur: 500; 
+                easing: easeInOutQuad;
+            `);
+            };
+
+            // Asignar evento a cada contenedor
+            containers.forEach((container) => {
+            container.addEventListener('click', () => {
+                rotateContainers(container);
+            });
+            });
+
 
 
             // Obtiene referencias a elementos HTML por su ID. const: declara constantes. document.getElementById: busca un elemento por su ID.
