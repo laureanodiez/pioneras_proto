@@ -475,3 +475,106 @@ body, html {
         background-position: center !important;  /* Asegura que la imagen se centre */
     }
 }
+
+
+
+
+/* Contenedor principal de la historia */
+.contenedor-historia {
+    margin: 2rem auto;
+    padding: 1.5rem;
+    max-width: 800px;
+    background-color: #f9f9f9; /* Fondo suave */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    font-family: 'Sigmar', sans-serif; /* Fuente elegida */
+    line-height: 1.6;
+    color: #333; /* Texto oscuro */
+}
+
+/* Título de la historia */
+.titulo-historia {
+    font-size: 2rem;
+    text-align: center;
+    color: #0044cc; /* Color azul vibrante */
+    margin-bottom: 1rem;
+}
+
+/* Texto general de la historia */
+.texto-historia {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: justify; /* Alineación justificada */
+}
+
+/* Etiqueta destacada (#Pionera) */
+.etiqueta {
+    font-weight: bold;
+    color: #cc0000; /* Color rojo vibrante */
+    font-style: italic; /* Estilo cursiva */
+}
+
+/* Estilo responsivo */
+@media (max-width: 600px) {
+    .contenedor-historia {
+        padding: 1rem;
+    }
+
+    .titulo-historia {
+        font-size: 1.5rem;
+    }
+
+    .texto-historia {
+        font-size: 0.9rem;
+    }
+}
+
+
+/* Contenedor principal para la página sobre nosotros */
+.contenedor-sobre-nosotros {
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 800px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Sigmar', sans-serif;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* Título de la sección */
+.titulo-seccion {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #0044cc;
+    margin-bottom: 1.5rem;
+}
+
+/* Descripciones */
+.descripcion-proyecto, .descripcion-equipo, .descripcion-integrantes {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+/* Etiqueta destacada */
+.etiqueta {
+    font-weight: bold;
+    color: #cc0000;
+}
+
+/* Estilo responsivo */
+@media (max-width: 600px) {
+    .contenedor-sobre-nosotros {
+        padding: 1rem;
+    }
+
+    .titulo-seccion {
+        font-size: 2rem;
+    }
+
+    .descripcion-proyecto, .descripcion-equipo, .descripcion-integrantes {
+        font-size: 0.9rem;
+    }
+}

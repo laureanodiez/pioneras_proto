@@ -91,6 +91,48 @@
             #modal .modal-content button:hover {
                 background-color: #8A47A3;
             }
+            #question-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 30; /* Mayor prioridad que otros modales */
+                display: none;
+            }
+            #question-modal .modal-content {
+                background-color: #FDFBF6;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                max-width: 400px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+            #question-modal .modal-content h2 {
+                margin: 0 0 10px;
+                color: #640D75;
+            }
+            #question-modal .modal-content p {
+                margin: 0 0 20px;
+                color: #333;
+            }
+            #question-modal .modal-content button {
+                background-color: #640D75;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+            #question-modal .modal-content button:hover {
+                background-color: #8A47A3;
+            }
+
         </style>
         
     </head>
@@ -114,6 +156,15 @@
             </div>
         </div>
 
+        <div id="question-modal">
+            <div class="modal-content">
+                <h2 id="question-title">Pregunta</h2>
+                <p id="question-text">Aquí irá la pregunta.</p>
+                <div id="question-options"></div>
+            </div>
+        </div>
+        
+
         <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
             <!-- Nieve/ventisca localizada cerca del marcador -->
             <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5" position="0 0 -1" id="snow" visible="true"></a-entity>
@@ -130,8 +181,8 @@
                         </a-image>
                 
                 
-                        <!-- Additional images (initially hidden) -->
-                        <a-image id="estampilla-pio-centro" 
+                        <!-- Centro: pionera -->
+                        <a-image id="estampilla-pio-centro"
                                 src="assets/RA/ESTAMPILLA 3.png" 
                                 position="1 0 0" 
                                 scale="0 0 0" 
@@ -139,31 +190,6 @@
                                 visible="false"
                                 class="clickable">
                         </a-image>
-                        <a-image id="estampilla-ara-derecha" 
-                                src="assets/RA/ESTAMPILLA 2.png"  
-                                position="1 0 0"
-                                scale="0 0 0" 
-                                rotation="-90 0 0"
-                                visible="false"
-                                class="clickable">
-                        </a-image>
-                        <a-image id="estampilla-ant-izquierda" 
-                                src="assets/RA/ESTAMPILLA 1.png"  
-                                position="-1 0 0"
-                                scale="0 0 0" 
-                                rotation="-90 0 0"
-                                visible="false"
-                                class="clickable">
-                        </a-image>
-                        <a-image id="estampilla-rrii-abajo" 
-                                src="assets/RA/ESTAMPILLA 4.png"  
-                                position="0 0 1"
-                                scale="0 0 0" 
-                                rotation="-90 0 0"
-                                visible="false"
-                                class="clickable">
-                        </a-image>
-
                         <a-image id="contenedor-pio-centro-1" 
                                 src="assets/RA/contenedor-pio-centro-3.png"  
                                 position="0.5 0 0"
@@ -188,6 +214,87 @@
                                 visible="false"
                                 class="clickable">
                         </a-image>
+
+
+                        <!-- Derecha: ARA -->
+                        <a-image id="estampilla-ara-derecha" 
+                                src="assets/RA/ESTAMPILLA 2.png"  
+                                position="1 0 0"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-ara-1" 
+                            src="assets/RA/contenedor-ARA-1.png"
+                            position="0.6 0.1 0.1"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-ara-2" 
+                            src="assets/RA/contenedor-ARA-2.png"
+                            position="0.5 0 0"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+
+
+                        <!-- Izquierda: Antartida -->
+                        <a-image id="estampilla-ant-izquierda" 
+                                src="assets/RA/ESTAMPILLA 1.png"  
+                                position="-1 0 0"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-antartida-1" 
+                            src="assets/RA/contenedor-antartida-1.png"
+                            position="0.6 0.1 0.1"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-antartida-pregunta" 
+                            src="assets/RA/contenedor-antartida-pregunta.png"
+                            position="0.5 0 0"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+
+
+                        <!-- Abajo: RRII -->
+                        <a-image id="estampilla-rrii-abajo" 
+                                src="assets/RA/ESTAMPILLA 4.png"  
+                                position="0 0 1"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-rrii-1" 
+                            src="assets/RA/contenedor-rrii-1.png"
+                            position="0.6 0.1 0.1"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-rrii-pregunta" 
+                            src="assets/RA/contenedor-rrii-pregunta.png"
+                            position="0.5 0 0"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
                     </a-marker>
         
             <a-entity camera>
@@ -198,6 +305,41 @@
         <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
 
         <script>
+            // Mapear contenedores para cada estampilla
+            const allContainers = {
+                centro: ['#contenedor-pio-centro-1', 'contenedor-pio-centro-2', 'contenedor-pio-centro-3'],
+                derecha: ['#contenedor-ara-1', '#contenedor-ara-2'],
+                izquierda: ['#contenedor-antartida-1', '#contenedor-antartida-pregunta'],
+                abajo: ['#contenedor-rrii-1', '#contenedor-rrii-pregunta'],
+            };
+
+            // Función para mostrar contenedores en secuencia
+            const showContainersSequence = (stampKey) => {
+                const containers = allContainers[stampKey];
+
+                containers.forEach((containerId, index) => {
+                    const container = document.querySelector(containerId);
+
+                    setTimeout(() => {
+                        container.setAttribute('visible', 'true');
+                        container.setAttribute('animation', `
+                            property: scale; 
+                            to: 1 1 1; 
+                            dur: 500; 
+                            easing: easeInOutQuad; 
+                            delay: ${index * 200};
+                        `);
+
+                        // Solo si es izquierda o abajo, activar evento para mostrar el modal en el último contenedor
+                        if ((stampKey === 'izquierda' || stampKey === 'abajo') && index === containers.length - 1) {
+                            container.addEventListener('click', () => {
+                                showQuestionModal(stampKey);
+                            });
+                        }
+                    }, index * 1000); // Espaciado de 1 segundo entre contenedores
+                });
+            };
+
             // Function to reveal additional images
             const imageRight = document.querySelector('#estampilla-ara-derecha');
             const imageLeft = document.querySelector('#estampilla-ant-izquierda');
@@ -312,19 +454,19 @@
                 }
                 };
 
-                // Function to handle stamp selection
-                const selectStamp = (selectedImage) => {
+            // Function to handle stamp selection
+            const selectStamp = (selectedImage) => {
                 [mainImage, imageRight, imageLeft, imageBottom].forEach((image) => {
                     if (image !== selectedImage) {
-                    image.setAttribute('animation', `
-                        property: opacity;
-                        to: 0;
-                        dur: 500;
-                        easing: easeInOutQuad;
-                    `);
-                    setTimeout(() => {
-                        image.setAttribute('visible', 'false');
-                    }, 500); // Hide after animation ends
+                        image.setAttribute('animation', `
+                            property: opacity;
+                            to: 0;
+                            dur: 500;
+                            easing: easeInOutQuad;
+                        `);
+                        setTimeout(() => {
+                            image.setAttribute('visible', 'false');
+                        }, 500);
                     }
                 });
 
@@ -342,30 +484,18 @@
                     easing: easeInOutQuad;
                 `);
 
-                setTimeout(() => {
-                    setTimeout(() => {
-                        selectedImage.setAttribute('animation', `
-                            property: position;
-                            to: -0.5 0 0;
-                            dur: 1000;
-                            easing: easeInOutQuad;
-                            `);
-                    }, 0);
+                // Determinar qué estampilla fue seleccionada
+                const stampKey = 
+                    selectedImage === imageRight ? 'derecha' :
+                    selectedImage === imageLeft ? 'izquierda' : 
+                    selectedImage === imageBottom ? 'abajo' : null;
 
-                    [container1, container2, container3].forEach((container, index) => {
-                        setTimeout(() => {
-                    
-                            container.setAttribute('visible', 'true');
-                            container.setAttribute('animation', `
-                                property: scale; 
-                                to: 1 1 1; 
-                                dur: 500; 
-                                easing: easeInOutQuad; 
-                                delay: ${index * 200}
-                            `);
-                        }, 1000);
-                    });
-                }, 2000); // Wait 2 seconds before moving and showing containers
+                if (!stampKey) return;
+
+                // Mostrar secuencia de contenedores según la estampilla seleccionada
+                setTimeout(() => {
+                    showContainersSequence(stampKey);
+                }, 1000); // Espera a que termine la animación de la estampilla
             };
 
             // Update the click listeners for the stamps
@@ -446,6 +576,8 @@
                 }
             });
         
+
+
             // Define pasos para un tutorial. const: declara una constante. tutorialSteps: nombre de la constante.
             const tutorialSteps = [
                 { title: "Bienvenido", text: "Bienvenido a la experiencia RA. Haz clic en 'Continuar' para comenzar." }, // Paso 1. title: título del paso. text: descripción del paso.
@@ -487,6 +619,77 @@
         
             modal.style.display = "flex"; // Muestra el modal al cargar. style.display: modifica el estilo CSS.
             showTutorialStep(); // Muestra el primer paso del tutorial.
+        
+
+
+            // Contador global de estampillas obtenidas
+            let stampCounter = 0;
+
+            // Preguntas y respuestas correctas
+            const questionsData = {
+                izquierda: {
+                    question: "¿Cuál es la temperatura normal en las bases antárticas?",
+                    options: ["-5C° VERANO, -30c° INVIERNO", "-3C° VERANO, -20c° INVIERNO", "4C° VERANO, -15c° INVIERNO"],
+                    correct: 2,
+                },
+                abajo: {
+                    question: "¿Cuál es el porcentaje de mujeres en el campo de la investigación en Argentina?",
+                    options: ["54%", "38%", "63%"],
+                    correct: 1,
+                },
+            };
+
+            // Mostrar pregunta en el modal de preguntas
+            const showQuestionModal = (stampKey) => {
+                const modal = document.getElementById('question-modal');
+                const title = document.getElementById('question-title');
+                const text = document.getElementById('question-text');
+                const options = document.getElementById('question-options');
+
+                const question = questionData[stampKey];
+
+                // Configurar contenido del modal
+                title.textContent = "Pregunta";
+                text.textContent = question.question;
+                options.innerHTML = ''; // Limpia opciones previas
+
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.addEventListener('click', () => handleAnswer(stampKey, index));
+                    options.appendChild(button);
+                });
+
+                // Mostrar modal
+                modal.style.display = 'flex';
+            };
+
+            // Manejar respuesta del usuario
+            const handleAnswer = (stampKey, selectedOption) => {
+                const modal = document.getElementById('question-modal');
+                const question = questionData[stampKey];
+
+                if (selectedOption === question.correct) {
+                    alert("¡Respuesta correcta!");
+                    stampCounter++;
+                    console.log(`Estampillas obtenidas: ${stampCounter}`);
+                } else {
+                    alert("Respuesta incorrecta. Inténtalo de nuevo.");
+                }
+
+                // Ocultar modal
+                modal.style.display = 'none';
+            };
+
+            // Asociar modales con contenedores específicos
+            document.querySelector('#contenedor-antartida-pregunta').addEventListener('click', () => {
+                showQuestionModal('izquierda');
+            });
+
+            document.querySelector('#contenedor-rrii-pregunta').addEventListener('click', () => {
+                showQuestionModal('abajo');
+            });
+
         </script>
         
     </body>
