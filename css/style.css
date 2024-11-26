@@ -112,6 +112,7 @@ body, html {
     background: linear-gradient(180deg, #c4e687, #9A037E);
     height: 100px;
 }
+
 .footer-banner {
     background-color: #9A037E; /* Color de fondo púrpura */
     padding: 20px 0;
@@ -120,20 +121,36 @@ body, html {
 
 .logos-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px; /* Espaciado entre los logos */
+    flex-wrap: wrap; /* Permite que los elementos se ajusten a múltiples líneas */
+    justify-content: center; /* Centra los logos horizontalmente */
+    align-items: center; /* Centra los logos verticalmente */
+    gap: 20px; /* Espaciado entre los logos */
+    padding: 10px; /* Espaciado interno del contenedor */
 }
 
 .logo-item {
     text-align: center;
+    flex: 1 1 100px; /* Asegura que cada logo ocupe al menos 100px y sea flexible */
+    max-width: 500px; /* Limita el ancho máximo de cada logo */
 }
 
 .logo-item img {
-    max-width: auto; /* Ajusta el tamaño de los logos */
-    height: auto;
-    margin-bottom: 10px;
+    width: 100%; /* Ajusta el ancho de la imagen al tamaño del contenedor */
+    max-width: 300px; /* Limita el tamaño máximo para que no crezca demasiado */
+    height: auto; /* Mantiene la proporción de la imagen */
+    margin: 0 auto; /* Centra las imágenes en su contenedor */
 }
+
+/* Estilo responsive */
+@media (max-width: 768px) {
+    .logos-container {
+        gap: 15px; /* Reduce el espacio entre logos en pantallas más pequeñas */
+    }
+    .logo-item img {
+        max-width: 100px; /* Reduce el tamaño máximo en dispositivos pequeños */
+    }
+}
+
 
 
 
