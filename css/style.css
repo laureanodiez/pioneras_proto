@@ -229,18 +229,20 @@ body, html {
 
 .title {
     font-size: 50px;
-    color: blanchedalmond;
+    color: white;
     font-family: 'Sigmar'; 
-    -webkit-text-stroke: 1px black;
+    /*-webkit-text-stroke: 1px black;*/
+    font-weight: 10;
     text-align: left;
     line-height: 1; /* Ajuste del espacio entre líneas */
 }
 
 .subtitle {
     font-size: 30px;
-    font-style: italic;
+    font-family: 'Raleway'; 
+    /*font-style: italic;*/
     color: white;
-    text-align: left;
+    text-align: center;
     line-height: 1; /* Sin espacio adicional entre líneas */
     margin-top: 0;
 }
@@ -258,11 +260,15 @@ body, html {
 }
 
 .right-text {
-    font-size: 4vh;
-    font-style: italic;
-    color: #333;
+    font-size: 30px;
+    font-family: 'Raleway'; 
+    /*font-style: italic;*/
+    color: #640D75;
     text-align: center;
     margin: 10px;
+    background-color: #b8f084; /* Color verde claro */
+    padding: 0 5px; /* Espaciado interno */
+    border-radius: 0px; /* Bordes redondeados */
 }
 
 /*
@@ -301,6 +307,7 @@ body, html {
     
     .contenedor-principal .contenedor-izquierda, .contenedor-derecha {
         width: 100%;
+        height: 100%;
     }
 }
 
@@ -369,7 +376,7 @@ body, html {
 }
 
 .modal-content {
-    background: white;
+    background: #640D75;
     padding: 20px;
     max-width: 400px;
     width: 90%;
@@ -379,23 +386,23 @@ body, html {
 }
 
 .modal-content span, .modal-content a {
-    color: #640D75;
+    color: white;
     cursor: pointer;
     text-decoration: underline;
+    font-family: 'Raleway';
     font-weight: bold;
 }
 
 .modal-content span:hover, .modal-content a:hover {
-    color: #804D99;
+    color: #c4e687;
 }
 
 .modal-content .close {
     position: absolute;
     top: 10px;
-    left: 10px;
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #640D75;
+    left: 25px;
+    font-size: 2em;
+    color: white;
     cursor: pointer;
     background: none;
     border: none;
@@ -410,6 +417,87 @@ body, html {
     font-size: 0.9em;
     color: #888;
 }
+
+/* Cuadros de ingreso */
+.modal-content input[type="email"], 
+.modal-content input[type="password"], 
+.modal-content input[type="text"] {
+    width: calc(100% - 30px); /* Se asegura que no exceda los límites */
+    padding: 12px 15px; /* Espaciado interno */
+    margin: 10px auto; /* Centrado con margen superior/inferior */
+    border: 2px solid #f7c8e0; /* Borde rosa claro */
+    border-radius: 20px; /* Bordes redondeados */
+    background-color: #ffeaf3; /* Fondo rosa claro */
+    font-family: 'Raleway', sans-serif; /* Fuente */
+    font-size: 1rem; /* Tamaño del texto */
+    color: #333; /* Color del texto */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+    outline: none; /* Elimina el borde azul al hacer clic */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Sutil sombra interna */
+}
+
+.modal-content input[type="email"]:focus, 
+.modal-content input[type="password"]:focus, 
+.modal-content input[type="text"]:focus {
+    border-color: #f09abe; /* Borde más oscuro al enfocarse */
+    box-shadow: 0 0 5px #f09abe; /* Resaltado */
+}
+
+/* Botón de inicio con Google */
+.google-login {
+    width: 100%; /* Ocupa el ancho completo */
+    padding: 10px 15px; /* Espaciado interno */
+    margin: 15px 0; /* Margen entre elementos */
+    border: 2px solid #ccc; /* Borde gris claro */
+    border-radius: 20px; /* Bordes redondeados */
+    background-color: #fff; /* Fondo blanco */
+    font-family: 'Raleway', sans-serif; /* Fuente */
+    font-size: 1rem; /* Tamaño del texto */
+    color: #333; /* Color del texto */
+    display: flex; /* Para alinear el logo y el texto */
+    align-items: center; /* Alinea verticalmente */
+    justify-content: center; /* Alinea horizontalmente */
+    gap: 10px; /* Espacio entre el logo y el texto */
+    cursor: pointer; /* Cursor de mano */
+    transition: all 0.3s ease; /* Transición suave */
+}
+
+.google-login img {
+    width: 20px; /* Tamaño del logo */
+    height: 20px; /* Asegura proporción */
+}
+
+.google-login:hover {
+    background-color: #f7f7f7; /* Fondo gris claro al pasar el mouse */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+/* Botones generales */
+.modal-content button {
+    width: calc(100% - 30px); /* Evita que sobresalga del modal */
+    padding: 12px 15px; /* Espaciado interno */
+    margin: 10px auto; /* Centrado */
+    border: none; /* Sin borde */
+    border-radius: 20px; /* Bordes redondeados */
+    background-color: #b8f084; /* Fondo verde claro */
+    font-family: 'Raleway', sans-serif; /* Fuente */
+    font-size: 1rem; /* Tamaño del texto */
+    color: #333; /* Color del texto */
+    cursor: pointer; /* Cursor de mano */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+.modal-content button:hover {
+    background-color: #a3e06d; /* Fondo más oscuro al pasar el mouse */
+}
+
+/* Asegura que el modal no permita desbordes */
+.modal-content {
+    box-sizing: border-box; /* Incluye padding y border */
+    overflow: hidden; /* Oculta cualquier desborde */
+}
+
+
 
 
 
@@ -432,9 +520,12 @@ body, html {
 
 .text-parallax {
     font-size: 4vw; /* Tamaño adaptativo */
+    font-family: 'Raleway'; 
+    font-weight: bolder;
     text-align: center;
     color: white;
-    -webkit-text-stroke: 1px black;
+    -webkit-text-stroke: 1px white;
+    text-shadow: 3px 3px #4b256e;
 }
 
 @media (max-width: 768px) {
@@ -523,57 +614,83 @@ body, html {
 }
 
 
-
-
-/* Contenedor principal de la historia */
-.contenedor-historia {
-    margin: 2rem auto;
-    padding: 1.5rem;
-    max-width: 800px;
-    background-color: #c4e687; /* Fondo suave */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    font-family: 'Sigmar', sans-serif; /* Fuente elegida */
-    line-height: 1.6;
-    color: #333; /* Texto oscuro */
-}
-
-/* Título de la historia */
-.titulo-historia {
+.titulo-principal {
+    font-family: 'Sigmar';
     font-size: 2rem;
+    font-weight: bold;
     text-align: center;
-    color: #623c94; /* Color azul vibrante */
-    margin-bottom: 1rem;
+    color: #623c94; /* Color oscuro para contraste */
+    margin-bottom: 2rem; /* Espaciado inferior */
+    background-color: #b8f084; /* Fondo verde claro */
+    padding: 1rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
 }
 
-/* Texto general de la historia */
-.texto-historia {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    text-align: justify; /* Alineación justificada */
+.contenedor-historia { 
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem auto;
+    padding: 1rem;
+    max-width: 1200px;
 }
 
-/* Etiqueta destacada (#Pionera) */
+.fila {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.columna-texto {
+    flex: 1;
+    font-family: 'Raleway'; 
+    font-size: 20px;
+    line-height: 1.8;
+    text-align: justify;
+    background-color: #b8f084; /* Color verde claro */
+    color: #333; /* Color de texto oscuro */
+    padding: 1rem;
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.columna-imagen {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.columna-imagen img {
+    max-width: 50%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.fila.inversa {
+    flex-direction: row-reverse;
+}
+
 .etiqueta {
     font-weight: bold;
-    color: #623c94; /* Color rojo vibrante */
-    font-style: italic; /* Estilo cursiva */
+    color: #cc0000;
 }
 
-/* Estilo responsivo */
-@media (max-width: 600px) {
-    .contenedor-historia {
-        padding: 1rem;
+/* Responsive design */
+@media (max-width: 768px) {
+    .fila {
+        flex-direction: column;
     }
 
-    .titulo-historia {
-        font-size: 1.5rem;
+    .fila.inversa {
+        flex-direction: column;
     }
 
-    .texto-historia {
-        font-size: 0.9rem;
+    .columna-imagen img {
+        max-width: 80%; /* Reducir tamaño de la imagen en pantallas pequeñas */
     }
 }
+
+
 
 
 /* Contenedor principal para la página sobre nosotros */
@@ -623,4 +740,39 @@ body, html {
     .descripcion-proyecto, .descripcion-equipo, .descripcion-integrantes {
         font-size: 0.9rem;
     }
+}
+
+/* Resaltado de texto */
+.resaltado {
+    background-color: #b8f084; /* Color verde claro */
+    color: #333; /* Color de texto oscuro */
+    padding: 0 5px; /* Espaciado interno */
+    border-radius: 0px; /* Bordes redondeados */
+}
+
+/* Ajustes para contenedores en mobile */
+@media (max-width: 768px) {
+    .contenedor-principal {
+        margin: 0; /* Sin márgenes externos */
+        background: none; /* Elimina los bordes blancos */
+    }
+
+    .banner-title {
+        font-size: 1.5em; /* Ajusta el tamaño del texto del título */
+    }
+
+    .nav-item {
+        font-size: 0.9em; /* Reduce el tamaño del texto en el menú */
+    }
+}
+
+
+.spacer-sticker {
+    background-image: url('../assets/decor/separador-verde.png');
+    height: 100%; /* Altura adaptativa en función de la ventana */
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
