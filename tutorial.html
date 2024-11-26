@@ -12,6 +12,86 @@
         <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
         <!-- Enlace al archivo JavaScript principal -->
         <script src="./js/main.js" defer></script>
+    
+        <style>
+            
+            .container {
+                max-width: 400px;
+                margin: 0 auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+                padding: 20px;
+                background: #c4e687;
+                border-radius: 20px;
+                box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+                position: relative;
+            }
+    
+            .container h2 {
+                font-size: 24px;
+                font-weight: bold;
+                color: #623c94;
+                margin-bottom: 15px;
+            }
+    
+            .container p {
+                font-size: 14px;
+                margin-bottom: 20px;
+                line-height: 1.5;
+            }
+    
+            .steps {
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 20px;
+            }
+    
+            .step {
+                font-size: 14px;
+                color: #333;
+            }
+    
+            .step span {
+                font-size: 20px;
+                font-weight: bold;
+                color: #623c94;
+            }
+    
+            .btn-start-ar {
+                display: inline-block;
+                padding: 15px 30px;
+                font-size: 18px;
+                color: #fff;
+                background: #623c94;
+                font-family: 'Sigmar', sans-serif;
+                border: none;
+                border-radius: 10px;
+                text-shadow: 2px 2px #4b256e;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+                cursor: pointer;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+    
+            .btn-start-ar:hover {
+                transform: translateY(-3px);
+                box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.4);
+            }
+    
+            .btn-start-ar:active {
+                transform: translateY(1px);
+                box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
+            }
+    
+            .background-decor {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: -1;
+                overflow: hidden;
+            }
+        </style>
     </head>
 
     <body>
@@ -27,7 +107,7 @@
                     <a href="#" onclick="showLoginModal()" class="nav-item">Iniciar Sesión</a>
                     <a href="#" onclick="showRegisterModal()" class="nav-item">Registrarse</a>
                     <a href="mas-informacion.html" class="nav-item">Más Información</a>
-                    <a href="sobre-nosotros.html" class="nav-item">Sobre Nosotros</a>
+                    <a href="sobre-nosotros.html" class="nav-item">Sobre el Proyecto</a>
                     <a href="https://www.unr.edu.ar" target="_blank">
                         <img src="./assets/banners/logounr.png" alt="Logo UNR" class="unr-logo">
                     </a>
@@ -40,7 +120,7 @@
                         <button onclick="showLoginModal()">Iniciar Sesión</button>
                         <button onclick="showRegisterModal()">Registrarse</button>
                         <button onclick="location.href='mas-informacion.html'">Más Información</button>
-                        <button onclick="location.href='sobre-nosotros.html'">Sobre Nosotros</button>
+                        <button onclick="location.href='sobre-nosotros.html'">Sobre el Proyecto</button>
                         <a href="https://www.unr.edu.ar" target="_blank">
                             <img src="./assets/banners/logounr.png" alt="Logo UNR">
                         </a>
@@ -56,7 +136,7 @@
             <section class="contenedor-principal">
                 <!-- Contenedor Izquierda con título "Pioneras" y subtítulo -->
                 <div class="contenedor-izquierda">
-                    <h1 class="title">Experiencia RA</h1>
+                    <h1 class="title">Apuntá y explorá</h1>
                 </div>
                 
                 <!-- Contenedor Derecha con fondo pinneado y texto en cursiva -->
@@ -66,13 +146,22 @@
             </section>
 
             <!-- Espacio en blanco -->
-            <div class="spacer"></div>
+            <div class="spacer-grad"></div>
             
 
             <!-- Contenedor principal -->
             <div class="container">
-                <h2>Cómo usar la Realidad Aumentada</h2>
-                <p>Apunta tu cámara al marcador proporcionado para ver los elementos en realidad aumentada.</p>
+                <h2>¿Cómo funciona?</h2>
+                <div class="steps">
+                    <div class="step">
+                        <span>1.</span>
+                        <p>Es necesario que habilites el acceso a la cámara y tu buscador para poder iniciar.</p>
+                    </div>
+                    <div class="step">
+                        <span>2.</span>
+                        <p>Hecho eso, mantené apuntado el afiche con la cámara y comenzá a explorar sus elementos.</p>
+                    </div>
+                </div>
                 <button class="btn-start-ar" onclick="window.location.href='ar.html'">Comenzar</button>
             </div>
             
@@ -101,6 +190,20 @@
                     <input type="password" placeholder="Contraseña" required>
                     <button onclick="register()">Registrarse</button>
                     <p><a href="#" onclick="showLoginModal()">¿Ya tienes cuenta? Iniciar Sesión</a></p>
+                </div>
+            </div>
+            
+            <!-- Espacio en blanco -->
+            <div class="spacer-grad2"></div>
+
+            <div class="footer-banner">
+                <div class="logos-container">
+                    <a class="logo-item" href="https://www.unr.edu.ar" target="_blank">
+                        <img src="assets/banners/logounr2.png" alt="Logo UNR">
+                    </a>
+                    <a class="logo-item" href="https://fcpolit.unr.edu.ar/secretarias/segesex/" target="_blank">
+                        <img src="assets/banners/logounr3.png" alt="Logo FCPOLIT">
+                    </a>
                 </div>
             </div>
 

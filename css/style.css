@@ -1,6 +1,7 @@
 /* Reset de márgenes y padding globales */
 body, html {
     margin: 0;
+    background: linear-gradient(180deg, #8300a3, #c4e687);
     padding: 0;
     box-sizing: border-box;
     overflow-x: hidden; /* Elimina el desplazamiento horizontal */
@@ -40,7 +41,7 @@ body, html {
 }
 
 .banner.scrolled {
-    background-color: rgba(100, 13, 117, 1); /* Fondo más sólido al hacer scroll */
+    background-color: rgb(135, 21, 158); /* Fondo más sólido al hacer scroll */
 }
 
 /* Título "Pioneras" */
@@ -99,10 +100,40 @@ body, html {
     height: 65px;
     margin-left: 100px;
     cursor: pointer;
+    margin-top: 0;
 }
 
 
+.spacer-grad {
+    background: linear-gradient(180deg, #8300a3, #c4e687);
+    height: 100px;
+}
+.spacer-grad2 {
+    background: linear-gradient(180deg, #c4e687, #9A037E);
+    height: 100px;
+}
+.footer-banner {
+    background-color: #9A037E; /* Color de fondo púrpura */
+    padding: 20px 0;
+    text-align: center;
+}
 
+.logos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* Espaciado entre los logos */
+}
+
+.logo-item {
+    text-align: center;
+}
+
+.logo-item img {
+    max-width: auto; /* Ajusta el tamaño de los logos */
+    height: auto;
+    margin-bottom: 10px;
+}
 
 
 
@@ -291,13 +322,28 @@ body, html {
 }
 
 #start-button {
-    padding: 10px 20px;
-    font-size: 1.2em;
-    font-family: 'Sigmar';
-    background-color: blanchedalmond;
-    color: black;
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 18px;
+    color: #fff;
+    background: #c4e687;
+    font-family: 'Sigmar', sans-serif;
     border: none;
+    border-radius: 10px;
+    text-shadow: 2px 2px #4b256e;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#start-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+#start-button:active {
+    transform: translateY(1px);
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
 }
 
 
@@ -484,7 +530,7 @@ body, html {
     margin: 2rem auto;
     padding: 1.5rem;
     max-width: 800px;
-    background-color: #f9f9f9; /* Fondo suave */
+    background-color: #c4e687; /* Fondo suave */
     border-radius: 10px; /* Bordes redondeados */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
     font-family: 'Sigmar', sans-serif; /* Fuente elegida */
@@ -496,7 +542,7 @@ body, html {
 .titulo-historia {
     font-size: 2rem;
     text-align: center;
-    color: #0044cc; /* Color azul vibrante */
+    color: #623c94; /* Color azul vibrante */
     margin-bottom: 1rem;
 }
 
@@ -510,7 +556,7 @@ body, html {
 /* Etiqueta destacada (#Pionera) */
 .etiqueta {
     font-weight: bold;
-    color: #cc0000; /* Color rojo vibrante */
+    color: #623c94; /* Color rojo vibrante */
     font-style: italic; /* Estilo cursiva */
 }
 
@@ -535,7 +581,7 @@ body, html {
     margin: 2rem auto;
     padding: 2rem;
     max-width: 800px;
-    background-color: #f4f4f4;
+    background-color: #c4e687;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: 'Sigmar', sans-serif;
@@ -547,7 +593,7 @@ body, html {
 .titulo-seccion {
     font-size: 2.5rem;
     text-align: center;
-    color: #0044cc;
+    color: #623c94;
     margin-bottom: 1.5rem;
 }
 
@@ -561,7 +607,7 @@ body, html {
 /* Etiqueta destacada */
 .etiqueta {
     font-weight: bold;
-    color: #cc0000;
+    color: #623c94;
 }
 
 /* Estilo responsivo */
