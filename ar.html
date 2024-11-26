@@ -163,6 +163,24 @@
                 <div id="question-options"></div>
             </div>
         </div>
+
+
+                      <!-- Texto de espera -->
+        <div id="loading-text" style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-family: 'Lora', serif;
+                font-size: 20px;
+                color: white;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                text-align: center;
+                display: block; /* Visible por defecto */
+                pointer-events: none; /* Asegura que no interfiera con clics */
+        ">
+                Apuntá tu cámara al afiche para comenzar.
+        </div>
         
 
         <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
@@ -305,6 +323,18 @@
         <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
 
         <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const marker = document.querySelector("#marker");
+                const loadingText = document.getElementById("loading-text");
+
+            marker.addEventListener("markerLost", () => {
+                loadingText.style.display = "block"; // Muestra el texto cuando se pierde el marcador
+            });
+
+            marker.addEventListener("markerFound", () => {
+                loadingText.style.display = "none"; // Oculta el texto cuando se encuentra el marcador
+            });
+            });
             // Mapear contenedores para cada estampilla
             const allContainers = {
                 centro: ['#contenedor-pio-centro-1', 'contenedor-pio-centro-2', 'contenedor-pio-centro-3'],
