@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <title>Experiencia Interactiva AR</title>
+        <!-- A-Frame y AR.js -->
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Sigmar&display=swap" rel="stylesheet">
+        
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+            #header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #C8F29F;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 20px;
+                z-index: 10;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+            #header h1 {
+                font-family: 'Sigmar', cursive;
+                font-size: 1.5rem;
+                color: #640D75;
+                margin: 0;
+            }
+            #header .user-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            #header .user-info .badge-icon {
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            #header .user-info .username {
+                background-color: #E8F8D9;
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-weight: bold;
+                color: #640D75;
+            }
+            #modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 20;
+                display: none;
+            }
+            #modal .modal-content {
+                background-color: #FDFBF6;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                max-width: 400px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+            #modal .modal-content h2 {
+                margin: 0 0 10px;
+                color: #640D75;
+            }
+            #modal .modal-content p {
+                margin: 0 0 20px;
+                color: #333;
+            }
+            #modal .modal-content button {
+                background-color: #640D75;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+            #modal .modal-content button:hover {
+                background-color: #8A47A3;
+            }
+            #question-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 30; /* Mayor prioridad que otros modales */
+                display: none;
+            }
+            #question-modal .modal-content {
+                background-color: #FDFBF6;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                max-width: 400px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+            #question-modal .modal-content h2 {
+                margin: 0 0 10px;
+                color: #640D75;
+            }
+            #question-modal .modal-content p {
+                margin: 0 0 20px;
+                color: #333;
+            }
+            #question-modal .modal-content button {
+                background-color: #640D75;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+            #question-modal .modal-content button:hover {
+                background-color: #8A47A3;
+            }
+
+        </style>
+        
+    </head>
+    
+    <body style="margin: 0; overflow: hidden;">
+        <div id="header">
+            <a href="index.html" target="">
+                <h1>Pioneras</h1>
+            </a>
+            <div class="user-info">
+                <span class="badge-icon">🏅</span>
+                <div class="username">Usuario</div>
+            </div>
+        </div>
+
+        <div id="modal">
+            <div class="modal-content">
+                <h2 id="tutorial-title">Bienvenido</h2>
+                <p id="tutorial-text">Bienvenido a la experiencia RA. Haz clic en "Continuar" para comenzar.</p>
+                <button id="tutorial-next">Continuar</button>
+            </div>
+        </div>
+
+        <div id="question-modal">
+            <div class="modal-content">
+                <h2 id="question-title">Pregunta</h2>
+                <p id="question-text">Aquí irá la pregunta.</p>
+                <div id="question-options"></div>
+            </div>
+        </div>
+
+
+                      <!-- Texto de espera -->
+        <div id="loading-text" style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-family: 'Lora', serif;
+                font-size: 20px;
+                color: white;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                text-align: center;
+                display: block; /* Visible por defecto */
+                pointer-events: none; /* Asegura que no interfiera con clics */
+        ">
+                Apuntá tu cámara al afiche para comenzar.
+        </div>
+        
+
+        <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
+            <!-- Nieve/ventisca localizada cerca del marcador -->
+            <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5" position="0 0 -1" id="snow" visible="true"></a-entity>
+                    <a-marker type="pattern" url="markers/pattern-pionera1.patt" id="marker">
+                        <!-- Main image -->
+                        <a-entity id="marker-content"></a-entity>
+                        <a-image id="main-image" 
+                            src="assets/decor/pionera1.jpeg" 
+                            position="0 0 0" 
+                            rotation="-90 0 0"
+                            scale="1 1 1" 
+                            animation="property: scale; to: 1.2 1.2 1.2; loop: true; dur: 1000; dir: alternate"
+                            class="clickable">
+                        </a-image>
+                
+                
+                        <!-- Centro: pionera -->
+                        <a-image id="estampilla-pio-centro"
+                                src="assets/RA/ESTAMPILLA 3.png" 
+                                position="1 0 0" 
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-pio-centro-1" 
+                                src="assets/RA/contenedor-pio-centro-3.png"  
+                                position="0.5 0 0"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-pio-centro-2" 
+                                src="assets/RA/contenedor-pio-centro-2.png"  
+                                position="0.6 0.1 0.1"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-pio-centro-3" 
+                                src="assets/RA/contenedor-pio-centro-1.png"  
+                                position="0.7 0.2 0.2"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+
+
+                        <!-- Derecha: ARA -->
+                        <a-image id="estampilla-ara-derecha" 
+                                src="assets/RA/ESTAMPILLA 2.png"  
+                                position="1 0 0"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-ara-1" 
+                            src="assets/RA/contenedor-ARA-1.png"
+                            position="0.6 0.1 0.1"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-ara-2" 
+                            src="assets/RA/contenedor-ARA-2.png"
+                            position="0.5 0 0"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+
+
+                        <!-- Izquierda: Antartida -->
+                        <a-image id="estampilla-ant-izquierda" 
+                                src="assets/RA/ESTAMPILLA 1.png"  
+                                position="-1 0 0"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-antartida-1" 
+                            src="assets/RA/contenedor-antartida-1.png"
+                            position="0.6 0.1 0.1"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-antartida-pregunta" 
+                            src="assets/RA/contenedor-antartida-pregunta.png"
+                            position="0.5 0 0"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+
+
+                        <!-- Abajo: RRII -->
+                        <a-image id="estampilla-rrii-abajo" 
+                                src="assets/RA/ESTAMPILLA 4.png"  
+                                position="0 0 1"
+                                scale="0 0 0" 
+                                rotation="-90 0 0"
+                                visible="false"
+                                class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-rrii-1" 
+                            src="assets/RA/contenedor-rrii-1.png"
+                            position="0.6 0.1 0.1"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+                        <a-image id="contenedor-rrii-pregunta" 
+                            src="assets/RA/contenedor-rrii-pregunta.png"
+                            position="0.5 0 0"
+                            scale="0 0 0" 
+                            rotation="-90 0 0"
+                            visible="false"
+                            class="clickable">
+                        </a-image>
+                    </a-marker>
+        
+            <a-entity camera>
+                <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
+            </a-entity>
+
+          </a-scene>
+        <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
+
+        <script>
+// Texto para encontrar el marcador
+document.addEventListener("DOMContentLoaded", () => {
+    const marker = document.querySelector("#marker");
+    const loadingText = document.getElementById("loading-text");
+
+marker.addEventListener("markerLost", () => {
+    loadingText.style.display = "block"; // Muestra el texto cuando se pierde el marcador
+});
+
+marker.addEventListener("markerFound", () => {
+    loadingText.style.display = "none"; // Oculta el texto cuando se encuentra el marcador
+});
+});
+
+// Obtiene referencias a elementos HTML por su ID. const: declara constantes. document.getElementById: busca un elemento por su ID.
+const snow = document.getElementById('snow'); // Elemento para efectos de nieve.
+const windSound = document.getElementById('wind-sound'); // Elemento de audio para sonido del viento.
+const marker = document.getElementById('marker'); // Marcador para interacción de realidad aumentada.
+
+// Reproduce el sonido del viento al hacer clic en la ventana. addEventListener: agrega un oyente de eventos. click: tipo de evento.
+window.addEventListener('markerFound', () => {
+    if (windSound.paused) { // Si el sonido está pausado...
+        windSound.play(); // Lo reproduce. play: método para reproducir audio.
+    }
+});
+
+
+// Mapear contenedores para cada estampilla
+const allContainers = {
+    centro: ['#contenedor-pio-centro-1', 'contenedor-pio-centro-2', 'contenedor-pio-centro-3'],
+    derecha: ['#contenedor-ara-1', '#contenedor-ara-2'],
+    izquierda: ['#contenedor-antartida-1', '#contenedor-antartida-pregunta'],
+    abajo: ['#contenedor-rrii-1', '#contenedor-rrii-pregunta'],
+};
+
+// Inicializo las distintas imagenes
+const mainImage = document.querySelector('#main-image');
+const imageRight = document.querySelector('#estampilla-ara-derecha');
+const imageLeft = document.querySelector('#estampilla-ant-izquierda');
+const imageBottom = document.querySelector('#estampilla-rrii-abajo');
+const imageCenter = document.querySelector('#estampilla-pio-centro');
+
+
+// Defino la posición inicial de las estampillas.
+const positionsEst = {
+    left: "-1 0 0",
+    right: "1 0 0",
+    bottom: "0 0 1",
+};
+// Posiciones iniciales contenedores
+const positions = {
+    last: "0.5 0 0",
+    middle: "0.6 0.1 0.1",
+    first: "0.7 0.2 0.2",
+    };
+
+
+
+// Define pasos para un tutorial. const: declara una constante. tutorialSteps: nombre de la constante.
+const tutorialSteps = [
+    { title: "Bienvenido", text: "Bienvenido a la experiencia RA. Haz clic en 'Continuar' para comenzar." }, // Paso 1. title: título del paso. text: descripción del paso.
+    { title: "Cómo usar", text: "Enfoca el marcador para iniciar la experiencia." }, // Paso 2.
+    { title: "Insignias", text: "Gana insignias respondiendo correctamente las preguntas." }, // Paso 3.
+    { title: "Más información", text: "Haz clic en 'PIONERAS' en el header para más información." } // Paso 4.
+];
+
+// Inicializa variables para el tutorial. let: declara variables que se pueden reasignar. currentStep: índice del paso actual.
+let currentStep = 0;
+
+// Obtiene referencias a elementos del tutorial. const: declara constantes. document.getElementById: busca elementos por su ID.
+const modal = document.getElementById("modal"); // Modal que contiene el tutorial.
+const tutorialTitle = document.getElementById("tutorial-title"); // Título del tutorial.
+const tutorialText = document.getElementById("tutorial-text"); // Texto descriptivo del tutorial.
+const tutorialNext = document.getElementById("tutorial-next"); // Botón para avanzar en el tutorial.
+
+// Muestra el paso actual del tutorial. const: declara constante. showTutorialStep: nombre de la función.
+const showTutorialStep = () => {
+    const step = tutorialSteps[currentStep]; // Obtiene el paso actual. step: variable local.
+    tutorialTitle.textContent = step.title; // Establece el título del paso. textContent: asigna texto al elemento.
+    tutorialText.textContent = step.text; // Establece el texto descriptivo.
+    if (currentStep === tutorialSteps.length - 1) { // Si es el último paso...
+        tutorialNext.textContent = "Finalizar"; // Cambia el texto del botón a 'Finalizar'.
+    } else { // Si no es el último paso...
+        tutorialNext.textContent = "Continuar"; // Cambia el texto del botón a 'Continuar'.
+    }
+};
+
+// Agrega evento para avanzar en el tutorial. addEventListener: agrega un oyente de eventos. click: tipo de evento.
+tutorialNext.addEventListener("click", () => {
+    currentStep++; // Avanza al siguiente paso.
+    if (currentStep < tutorialSteps.length) { // Si hay más pasos...
+        showTutorialStep(); // Muestra el siguiente paso.
+    } else { // Si no hay más pasos...
+        modal.style.display = "none"; // Oculta el modal.
+    }
+});
+
+modal.style.display = "flex"; // Muestra el modal al cargar. style.display: modifica el estilo CSS.
+showTutorialStep(); // Muestra el primer paso del tutorial.
+
+// Show additional images with animation
+const showAdditionalImages = () => {
+    [imageRight, imageLeft, imageBottom].forEach((image, index) => {
+        image.setAttribute('visible', 'true');
+        image.setAttribute('animation', `
+        property: scale; 
+        to: 0.75 0.75 0.75; 
+        dur: 500; 
+        easing: easeInOutQuad; 
+        delay: ${index * 200}
+        `);
+    });
+};
+ 
+let mainAbierto = 0;
+
+mainImage.addEventListener('click', () => {
+if (mainAbierto==0)
+    showAdditionalImages();
+});
+
+// Track the selected stamp
+let selectedStamp = null;
+
+
+// Update the click listeners for the stamps
+[imageRight, imageLeft, imageBottom].forEach((image) => {
+    image.addEventListener('click', () => {
+        selectOrDeselectStamp(image);
+    });
+});
+
+// Function to handle stamp selection and toggling
+const selectOrDeselectStamp = (clickedStamp) => {
+    if (selectedStamp === clickedStamp) {
+        // If the clicked stamp is already selected, reverse the animation
+        resetStamps();
+    } else {
+        // If a different stamp is selected or none is selected, proceed with selection
+        selectStamp(clickedStamp);
+        selectedStamp = clickedStamp;
+    }
+};
+
+
+// Function to handle stamp selection
+const selectStamp = (selectedImage) => {
+    [mainImage, imageRight, imageLeft, imageBottom].forEach((image) => {
+        if (image !== selectedImage) {
+            image.setAttribute('animation', `
+                property: opacity;
+                to: 0;
+                dur: 500;
+                easing: easeInOutQuad;
+            `);
+            setTimeout(() => {
+                image.setAttribute('visible', 'false');
+            }, 500);
+        }
+    });
+
+    selectedImage.setAttribute('animation', `
+        property: scale;
+        to: 1 1 1;
+        dur: 500;
+        easing: easeInOutQuad;
+    `);
+
+    selectedImage.setAttribute('animation__position', `
+        property: position;
+        to: 0 0 0;
+        dur: 500;
+        easing: easeInOutQuad;
+    `);
+
+    setTimeout(() => {
+        setTimeout(() => {
+            selectedImage.setAttribute(
+                "animation",
+                `
+                        property: position;
+                        to: -0.5 0 0;
+                        dur: 1000;
+                        easing: easeInOutQuad;
+                        `,
+            );
+        }, 0);
+
+            // Determinar qué estampilla fue seleccionada
+        const stampKey = 
+            selectedImage === imageRight ? 'derecha' :
+            selectedImage === imageLeft ? 'izquierda' : 
+            selectedImage === imageBottom ? 'abajo' : null;
+            if (!stampKey) return;
+
+        // Mostrar secuencia de contenedores según la estampilla seleccionada
+        setTimeout(() => {
+            showContainersSequence(stampKey);
+        }, 1000); // Espera a que termine la animación de la estampilla
+    }, 2000); // Wait 2 seconds before moving and showing containers
+
+};
+
+
+const resetStamps = () => {
+    if (!selectedStamp) return; // Si no hay una estampilla seleccionada, salir.
+
+    // Determina la posición original de la estampilla seleccionada
+    const selectedKey = selectedStamp === imageLeft ? "left"
+                    : selectedStamp === imageRight ? "right"
+                    : "bottom"; // Identifica si es izquierda, derecha o abajo
+    const originalPosition = positionsEst[selectedKey];
+
+    // Oculta los contenedores
+    [container1, container2, container3].forEach((container, index) => {
+        container.setAttribute('animation', `
+            property: scale; 
+            to: 0 0 0; 
+            dur: 500; 
+            easing: easeInOutQuad; 
+            delay: ${index * 200}
+        `);
+        setTimeout(() => {
+            container.setAttribute('visible', 'false');
+        }, 500);
+    });
+
+    // Animación para devolver la estampilla seleccionada a su posición original
+    selectedStamp.setAttribute('animation__scale', `
+        property: scale;
+        to: 0.75 0.75 0.75;
+        dur: 500;
+        easing: easeInOutQuad;
+    `);
+
+    selectedStamp.setAttribute('animation__position', `
+        property: position;
+        to: ${originalPosition};
+        dur: 500;
+        easing: easeInOutQuad;
+    `);
+
+    // Restaura las otras estampillas
+    [mainImage, imageRight, imageLeft, imageBottom].forEach((image) => {
+        if (image !== selectedStamp) {
+            image.setAttribute('visible', 'true');
+            image.setAttribute('animation', `
+                property: opacity;
+                to: 1;
+                dur: 500;
+                easing: easeInOutQuad;
+            `);
+            /*mainImage.setAttribute('animation', `
+                property: scale; 
+                to: 1.2 1.2 1.2; 
+                loop: true; 
+                dur: 1000; 
+                dir: alternate"
+            `);*/
+        }
+    });
+
+    // Reinicia el estado
+    selectedStamp = null;
+};
+
+
+// Función para mostrar contenedores en secuencia
+const showContainersSequence = (stampKey) => {
+    const containers = allContainers[stampKey];
+
+    containers.forEach((containerId, index) => {
+        const container = document.querySelector(containerId);
+
+            setTimeout(() => {
+                container.setAttribute("visible", "true");
+                container.setAttribute(
+                    "animation",
+                    `
+                            property: scale; 
+                            to: 1 1 1; 
+                            dur: 500; 
+                            easing: easeInOutQuad; 
+                            delay: ${index * 200}
+                        `,
+                );
+            }, 500);
+
+            // Solo si es izquierda o abajo, activar evento para mostrar el modal en el último contenedor
+            if ((stampKey === 'izquierda' || stampKey === 'abajo') && index === containers.length - 1) {
+                container.addEventListener('click', () => {
+                    showQuestionModal(stampKey);
+                });
+            }
+        }, index * 500); // Espaciado de 1 segundo entre contenedores
+    };
+
+// Asignar evento a cada contenedor
+allContainers.forEach((container) => {
+    container.addEventListener('click', () => {
+        rotateContainers(container);
+    });
+});
+
+// Función para rotar contenedores
+const rotateContainers = (clickedContainer) => {
+    // Identificar el índice del contenedor clickeado
+    const clickedIndex = allContainers.indexOf(clickedContainer);
+
+    // Reorganizar el orden de los contenedores según el clic
+    const newOrder = [
+        allContainers[(clickedIndex + 1) % 3], // El siguiente se convierte en el primero
+        allContainers[(clickedIndex + 2) % 3], // El último se convierte en el del medio
+        allContainers[clickedIndex],           // El clickeado se convierte en el último
+    ];
+
+    // Actualizar la lista de contenedores con el nuevo orden
+    allContainers = newOrder;
+
+    // Asignar las nuevas posiciones con animaciones
+    allContainers[0].setAttribute('animation', `
+        property: position; 
+        to: ${positions.first}; 
+        dur: 500; 
+        easing: easeInOutQuad;
+    `);
+
+    allContainers[1].setAttribute('animation', `
+        property: position; 
+        to: ${positions.middle}; 
+        dur: 500; 
+        easing: easeInOutQuad;
+    `);
+
+    allContainers[2].setAttribute('animation', `
+        property: position; 
+        to: ${positions.last}; 
+        dur: 500; 
+        easing: easeInOutQuad;
+    `);
+};
+
+
+    </script>
+        
+    </body>
+</html>

@@ -91,7 +91,7 @@
             #modal .modal-content button:hover {
                 background-color: #8A47A3;
             }
-            #question-modal {
+            #modal-question {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -102,9 +102,9 @@
                 justify-content: center;
                 align-items: center;
                 z-index: 30; /* Mayor prioridad que otros modales */
-                display: none;
+                display: none; /* Este valor debería ser 'none' por defecto */
             }
-            #question-modal .modal-content {
+            #modal-question .modal-cont-content {
                 background-color: #FDFBF6;
                 padding: 20px;
                 border-radius: 10px;
@@ -112,15 +112,15 @@
                 max-width: 400px;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             }
-            #question-modal .modal-content h2 {
+            #modal-question .modal-cont-content h2 {
                 margin: 0 0 10px;
                 color: #640D75;
             }
-            #question-modal .modal-content p {
+            #modal-question .modal-cont-content p {
                 margin: 0 0 20px;
                 color: #333;
             }
-            #question-modal .modal-content button {
+            #modal-question .modal-cont-content button {
                 background-color: #640D75;
                 color: #fff;
                 border: none;
@@ -129,10 +129,48 @@
                 cursor: pointer;
                 font-size: 1rem;
             }
-            #question-modal .modal-content button:hover {
+            #modal-question .modal-cont-content button:hover {
                 background-color: #8A47A3;
             }
 
+            .modal-cont {
+                display: none; /* Oculto por defecto */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                justify-content: center;
+                align-items: center;
+                z-index: 30;
+            }
+
+            .modal-cont-content {
+                background-color: #FFF;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                max-width: 400px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .modal-cont-content img {
+                display: block;
+                width: 100%;
+                max-width: 300px;
+                margin: 10px auto;
+                opacity: 0;
+                transform: scale(0.8);
+                animation: fadeInScale 0.5s ease-out forwards;
+            }
+
+            @keyframes fadeInScale {
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
         </style>
         
     </head>
@@ -156,13 +194,15 @@
             </div>
         </div>
 
-        <div id="question-modal">
-            <div class="modal-content">
-                <h2 id="question-title">Pregunta</h2>
-                <p id="question-text">Aquí irá la pregunta.</p>
-                <div id="question-options"></div>
+        <!-- Modal para preguntas -->
+        <div id="modal-question" class="modal-cont">
+            <div class="modal-cont-content">
+                <p id="question-text"></p>
+                <div id="options-container"></div>
+                <button onclick="closeQuestionModal()">Cerrar</button>
             </div>
         </div>
+
 
 
                       <!-- Texto de espera -->
@@ -182,8 +222,44 @@
                 Apuntá tu cámara al afiche para comenzar.
         </div>
         
+        <div id="modal-centro" class="modal-cont">
+            <div class="modal-cont-content">
+                <img id="contenedor-pio-centro" src="assets/RA/contenedor-pio-centro-3.png" alt="Centro 1">
+                <button id="prev-centro" onclick="showPrev('centro')">Anterior</button>
+                <button id="next-centro" onclick="showNext('centro')">Siguiente</button>
+                <button onclick="closeModal('modal-centro')">Cerrar</button>
+            </div>
+        </div>
+        
+        <div id="modal-derecha" class="modal-cont">
+            <div class="modal-cont-content">
+                <img id="contenedor-ara" src="assets/RA/contenedor-ARA-1.png" alt="Derecha 1">
+                <button id="prev-derecha" onclick="showPrev('derecha')">Anterior</button>
+                <button id="next-derecha" onclick="showNext('derecha')">Siguiente</button>
+                <button onclick="closeModal('modal-derecha')">Cerrar</button>
+            </div>
+        </div>
+        
+        <div id="modal-izquierda" class="modal-cont">
+            <div class="modal-cont-content">
+                <img id="contenedor-antartida-1" src="assets/RA/contenedor-antartida-1.png" alt="Izquierda 1">
+                <button id="prev-izquierda" onclick="showPrev('izquierda')">Anterior</button>
+                <button id="prev-izquierda" onclick="showNext('izquierda')">Siguiente</button>
+                <button onclick="closeModal('modal-izquierda')">Cerrar</button>
+            </div>
+            </div>
+        </div>
+        
+        <div id="modal-abajo" class="modal-cont">
+            <div class="modal-cont-content">
+                <img id="contenedor-rrii-1" src="assets/RA/contenedor-rrii-1.png" alt="Abajo 1">
+                <button id="prev-abajo" onclick="showPrev('abajo')">Anterior</button>
+                <button id="prev-abajo" onclick="showNext('abajo')">Siguiente</button>
+                <button onclick="closeModal('modal-abajo')">Cerrar</button>
+            </div>
+        </div>
 
-        <a-scene embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
+        <a-scene vr-mode-ui="enabled: false", embedded arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 800; displayHeight: 600;">
             <!-- Nieve/ventisca localizada cerca del marcador -->
             <a-entity particle-system="preset: snow; particleCount: 200; color: #ffffff; size: 0.5" position="0 0 -1" id="snow" visible="true"></a-entity>
                     <a-marker type="pattern" url="markers/pattern-pionera1.patt" id="marker">
@@ -208,30 +284,6 @@
                                 visible="false"
                                 class="clickable">
                         </a-image>
-                        <a-image id="contenedor-pio-centro-1" 
-                                src="assets/RA/contenedor-pio-centro-3.png"  
-                                position="0.5 0 0"
-                                scale="0 0 0" 
-                                rotation="-90 0 0"
-                                visible="false"
-                                class="clickable">
-                        </a-image>
-                        <a-image id="contenedor-pio-centro-2" 
-                                src="assets/RA/contenedor-pio-centro-2.png"  
-                                position="0.6 0.1 0.1"
-                                scale="0 0 0" 
-                                rotation="-90 0 0"
-                                visible="false"
-                                class="clickable">
-                        </a-image>
-                        <a-image id="contenedor-pio-centro-3" 
-                                src="assets/RA/contenedor-pio-centro-1.png"  
-                                position="0.7 0.2 0.2"
-                                scale="0 0 0" 
-                                rotation="-90 0 0"
-                                visible="false"
-                                class="clickable">
-                        </a-image>
 
 
                         <!-- Derecha: ARA -->
@@ -243,23 +295,6 @@
                                 visible="false"
                                 class="clickable">
                         </a-image>
-                        <a-image id="contenedor-ara-1" 
-                            src="assets/RA/contenedor-ARA-1.png"
-                            position="0.6 0.1 0.1"
-                            scale="0 0 0" 
-                            rotation="-90 0 0"
-                            visible="false"
-                            class="clickable">
-                        </a-image>
-                        <a-image id="contenedor-ara-2" 
-                            src="assets/RA/contenedor-ARA-2.png"
-                            position="0.5 0 0"
-                            scale="0 0 0" 
-                            rotation="-90 0 0"
-                            visible="false"
-                            class="clickable">
-                        </a-image>
-
 
                         <!-- Izquierda: Antartida -->
                         <a-image id="estampilla-ant-izquierda" 
@@ -270,23 +305,6 @@
                                 visible="false"
                                 class="clickable">
                         </a-image>
-                        <a-image id="contenedor-antartida-1" 
-                            src="assets/RA/contenedor-antartida-1.png"
-                            position="0.6 0.1 0.1"
-                            scale="0 0 0" 
-                            rotation="-90 0 0"
-                            visible="false"
-                            class="clickable">
-                        </a-image>
-                        <a-image id="contenedor-antartida-pregunta" 
-                            src="assets/RA/contenedor-antartida-pregunta.png"
-                            position="0.5 0 0"
-                            scale="0 0 0" 
-                            rotation="-90 0 0"
-                            visible="false"
-                            class="clickable">
-                        </a-image>
-
 
                         <!-- Abajo: RRII -->
                         <a-image id="estampilla-rrii-abajo" 
@@ -296,22 +314,6 @@
                                 rotation="-90 0 0"
                                 visible="false"
                                 class="clickable">
-                        </a-image>
-                        <a-image id="contenedor-rrii-1" 
-                            src="assets/RA/contenedor-rrii-1.png"
-                            position="0.6 0.1 0.1"
-                            scale="0 0 0" 
-                            rotation="-90 0 0"
-                            visible="false"
-                            class="clickable">
-                        </a-image>
-                        <a-image id="contenedor-rrii-pregunta" 
-                            src="assets/RA/contenedor-rrii-pregunta.png"
-                            position="0.5 0 0"
-                            scale="0 0 0" 
-                            rotation="-90 0 0"
-                            visible="false"
-                            class="clickable">
                         </a-image>
                     </a-marker>
         
@@ -323,6 +325,7 @@
         <audio id="wind-sound" src="assets/sounds/snow-sound.mp3" loop></audio>
 
         <script>
+            // Texto para encontrar el marcador
             document.addEventListener("DOMContentLoaded", () => {
                 const marker = document.querySelector("#marker");
                 const loadingText = document.getElementById("loading-text");
@@ -335,40 +338,200 @@
                 loadingText.style.display = "none"; // Oculta el texto cuando se encuentra el marcador
             });
             });
-            // Mapear contenedores para cada estampilla
-            const allContainers = {
-                centro: ['#contenedor-pio-centro-1', 'contenedor-pio-centro-2', 'contenedor-pio-centro-3'],
-                derecha: ['#contenedor-ara-1', '#contenedor-ara-2'],
-                izquierda: ['#contenedor-antartida-1', '#contenedor-antartida-pregunta'],
-                abajo: ['#contenedor-rrii-1', '#contenedor-rrii-pregunta'],
+            
+            // Preguntas y respuestas correctas
+            const questionsData = {
+                izquierda: {
+                    question: "¿Cuál es la temperatura normal en las bases antárticas?",
+                    options: ["-5C° VERANO, -30C° INVIERNO", "-3C° VERANO, -20C° INVIERNO", "4C° VERANO, -15C° INVIERNO"],
+                    correct: 2,
+                },
+                abajo: {
+                    question: "¿Cuál es el porcentaje de mujeres en el campo de la investigación en Argentina?",
+                    options: ["54%", "38%", "63%"],
+                    correct: 1,
+                },
             };
 
-            // Función para mostrar contenedores en secuencia
-            const showContainersSequence = (stampKey) => {
-                const containers = allContainers[stampKey];
+            // Mostrar pregunta en un modal separado
+            const showQuestionModal = (group) => {
+                const questionData = questionsData[group];
+                if (!questionData) return;
 
-                containers.forEach((containerId, index) => {
-                    const container = document.querySelector(containerId);
+                const questionModal = document.getElementById('modal-question');
+                const questionText = document.getElementById('question-text');
+                const optionsContainer = document.getElementById('options-container');
 
-                    setTimeout(() => {
-                        container.setAttribute('visible', 'true');
-                        container.setAttribute('animation', `
-                            property: scale; 
-                            to: 1 1 1; 
-                            dur: 500; 
-                            easing: easeInOutQuad; 
-                            delay: ${index * 200};
-                        `);
+                // Set the question text
+                questionText.textContent = questionData.question;
 
-                        // Solo si es izquierda o abajo, activar evento para mostrar el modal en el último contenedor
-                        if ((stampKey === 'izquierda' || stampKey === 'abajo') && index === containers.length - 1) {
-                            container.addEventListener('click', () => {
-                                showQuestionModal(stampKey);
-                            });
-                        }
-                    }, index * 1000); // Espaciado de 1 segundo entre contenedores
+                // Clear previous options
+                optionsContainer.innerHTML = '';
+
+                // Add options as buttons
+                questionData.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.onclick = () => checkAnswer(group, index);
+                    optionsContainer.appendChild(button);
                 });
+
+                // Display the question modal
+                questionModal.style.display = 'flex';
             };
+
+            // Verificar la respuesta seleccionada
+            const checkAnswer = (group, selectedOption) => {
+                const questionData = questionsData[group];
+                const feedback = document.getElementById('feedback');
+
+                if (selectedOption === questionData.correct) {
+                    feedback.textContent = "¡Respuesta correcta!";
+                    feedback.style.color = "green";
+                } else {
+                    feedback.textContent = "Respuesta incorrecta. Intenta nuevamente.";
+                    feedback.style.color = "red";
+                }
+            };
+
+            // Cerrar el modal de pregunta
+            const closeQuestionModal = () => {
+                const questionModal = document.getElementById('modal-question');
+                questionModal.style.display = 'none';
+            };
+
+            // Información de las imágenes de cada estampilla
+            const modalsData = {
+                centro: [
+                    "assets/RA/contenedor-pio-centro-3.png",
+                    "assets/RA/contenedor-pio-centro-2.png",
+                    "assets/RA/contenedor-pio-centro-1.png"
+                ],
+                derecha: [
+                    "assets/RA/contenedor-ARA-1.png",
+                    "assets/RA/contenedor-ARA-2.png"
+                ],
+                izquierda: [
+                    "assets/RA/contenedor-antartida-1.png",
+                    "assets/RA/contenedor-antartida-pregunta.png"
+                ],
+                abajo: [
+                    "assets/RA/contenedor-rrii-1.png",
+                    "assets/RA/contenedor-rrii-pregunta.png"
+                ]
+            };
+
+            // Índices actuales de las imágenes mostradas
+            const currentIndices = {
+                centro: 0,
+                derecha: 0,
+                izquierda: 0,
+                abajo: 0,
+            };
+
+            // Mostrar modal inicializando la primera imagen
+            const showModal = (modalId, group) => {
+                const modal = document.getElementById(modalId);
+                const imgElement = modal.querySelector("img");
+                modal.style.display = 'flex';
+
+                // Mostrar la primera imagen
+                currentIndices[group] = 0;
+                imgElement.src = modalsData[group][currentIndices[group]];
+
+                // Actualizar botones de navegación
+                updateButtons(group);
+
+                // Si es el último contenedor, mostrar la pregunta en un modal separado
+                if (group === "izquierda" || group === "abajo") {
+                    const questionIndex = modalsData[group].length - 1;
+                    if (currentIndices[group] === questionIndex) {
+                        setTimeout(() => showQuestionModal(group), 500); // Aseguramos que el modal de la pregunta aparezca después de la imagen
+                    }
+                }
+            };
+
+            // Actualizar el contenido del modal
+            const updateModalContent = (group) => {
+                const modal = document.getElementById(`modal-${group}`);
+                const imgElement = modal.querySelector("img");
+                imgElement.src = modalsData[group][currentIndices[group]];
+
+                // Limpiar preguntas anteriores si no está en el último contenedor
+                const questionContainer = document.getElementById(`question-${group}`);
+                if (questionContainer) {
+                    questionContainer.remove();
+                }
+
+                // Actualizar botones de navegación
+                updateButtons(group);
+
+                // Si es el último contenedor, mostrar pregunta
+                if (group === "izquierda" || group === "abajo") {
+                    const questionIndex = modalsData[group].length - 1;
+                    if (currentIndices[group] === questionIndex) {
+                        showQuestionModal(group); // Llama a la función directamente sin setTimeout
+                    }
+                }
+            };
+
+            // Cerrar modal
+            const closeModal = (modalId) => {
+                const modal = document.getElementById(modalId);
+                modal.style.display = 'none';
+
+                // Limpiar preguntas al cerrar modal
+                const questionContainer = modal.querySelector('[id^="question-"]');
+                if (questionContainer) {
+                    questionContainer.remove();
+                }
+            };
+
+            // Actualizar el estado de los botones de navegación
+            const updateButtons = (group) => {
+                const prevButton = document.getElementById(`prev-${group}`);
+                const nextButton = document.getElementById(`next-${group}`);
+
+                // Desactivar el botón "Anterior" si está en la primera imagen
+                if (currentIndices[group] === 0) {
+                    prevButton.disabled = true;
+                } else {
+                    prevButton.disabled = false;
+                }
+
+                // Desactivar el botón "Siguiente" si está en la última imagen
+                if (currentIndices[group] === modalsData[group].length - 1) {
+                    nextButton.disabled = true;
+                } else {
+                    nextButton.disabled = false;
+                }
+            };
+
+            // Navegar a la siguiente imagen
+            const showNext = (group) => {
+                if (currentIndices[group] < modalsData[group].length - 1) {
+                    currentIndices[group]++;
+                    updateModalContent(group);
+                }
+            };
+
+            // Navegar a la imagen anterior
+            const showPrev = (group) => {
+                if (currentIndices[group] > 0) {
+                    currentIndices[group]--;
+                    updateModalContent(group);
+                }
+            };
+
+            // Asociar eventos a las estampillas
+            document.getElementById('estampilla-ara-derecha').addEventListener('click', () => showModal('modal-derecha', 'derecha'));
+            document.getElementById('estampilla-ant-izquierda').addEventListener('click', () => showModal('modal-izquierda', 'izquierda'));
+            document.getElementById('estampilla-rrii-abajo').addEventListener('click', () => showModal('modal-abajo', 'abajo'));
+
+            let centro_abierto = 0;
+            if (centro_abierto == 1) {
+                document.getElementById('estampilla-pio-centro').addEventListener('click', () => showModal('modal-centro', 'centro'));
+            }
 
             // Function to reveal additional images
             const imageRight = document.querySelector('#estampilla-ara-derecha');
@@ -382,10 +545,6 @@
                 bottom: "0 0 1",
             };
 
-            // Contenedores escalonados
-            const container1 = document.querySelector('#contenedor-pio-centro-1');
-            const container2 = document.querySelector('#contenedor-pio-centro-2');
-            const container3 = document.querySelector('#contenedor-pio-centro-3');
 
             // Show additional images with animation
             const showAdditionalImages = () => {
@@ -399,199 +558,13 @@
                 delay: ${index * 200}
                 `);
             });
+   
             };
 
             mainImage.addEventListener('click', () => {
-            showAdditionalImages();
+                showAdditionalImages();
+                centro_abierto = 1;
             });
-
-            // Track the selected stamp
-            let selectedStamp = null;
-
-            const resetStamps = () => {
-                if (!selectedStamp) return; // Si no hay una estampilla seleccionada, salir.
-
-                // Determina la posición original de la estampilla seleccionada
-                const selectedKey = selectedStamp === imageLeft ? "left"
-                                : selectedStamp === imageRight ? "right"
-                                : "bottom"; // Identifica si es izquierda, derecha o abajo
-                const originalPosition = positionsEst[selectedKey];
-
-                // Oculta los contenedores
-                [container1, container2, container3].forEach((container, index) => {
-                    container.setAttribute('animation', `
-                        property: scale; 
-                        to: 0 0 0; 
-                        dur: 500; 
-                        easing: easeInOutQuad; 
-                        delay: ${index * 200}
-                    `);
-                    setTimeout(() => {
-                        container.setAttribute('visible', 'false');
-                    }, 500);
-                });
-
-                // Animación para devolver la estampilla seleccionada a su posición original
-                selectedStamp.setAttribute('animation__scale', `
-                    property: scale;
-                    to: 0.75 0.75 0.75;
-                    dur: 500;
-                    easing: easeInOutQuad;
-                `);
-
-                selectedStamp.setAttribute('animation__position', `
-                    property: position;
-                    to: ${originalPosition};
-                    dur: 500;
-                    easing: easeInOutQuad;
-                `);
-
-                // Restaura las otras estampillas
-                [mainImage, imageRight, imageLeft, imageBottom].forEach((image) => {
-                    if (image !== selectedStamp) {
-                        image.setAttribute('visible', 'true');
-                        image.setAttribute('animation', `
-                            property: opacity;
-                            to: 1;
-                            dur: 500;
-                            easing: easeInOutQuad;
-                        `);
-                        /*mainImage.setAttribute('animation', `
-                            property: scale; 
-                            to: 1.2 1.2 1.2; 
-                            loop: true; 
-                            dur: 1000; 
-                            dir: alternate"
-                        `);*/
-                    }
-                });
-
-                // Reinicia el estado
-                selectedStamp = null;
-            };
-
-
-
-            // Function to handle stamp selection and toggling
-            const selectOrDeselectStamp = (clickedStamp) => {
-                if (selectedStamp === clickedStamp) {
-                    // If the clicked stamp is already selected, reverse the animation
-                    resetStamps();
-                } else {
-                    // If a different stamp is selected or none is selected, proceed with selection
-                    selectStamp(clickedStamp);
-                    selectedStamp = clickedStamp;
-                }
-                };
-
-            // Function to handle stamp selection
-            const selectStamp = (selectedImage) => {
-                [mainImage, imageRight, imageLeft, imageBottom].forEach((image) => {
-                    if (image !== selectedImage) {
-                        image.setAttribute('animation', `
-                            property: opacity;
-                            to: 0;
-                            dur: 500;
-                            easing: easeInOutQuad;
-                        `);
-                        setTimeout(() => {
-                            image.setAttribute('visible', 'false');
-                        }, 500);
-                    }
-                });
-
-                selectedImage.setAttribute('animation', `
-                    property: scale;
-                    to: 1 1 1;
-                    dur: 500;
-                    easing: easeInOutQuad;
-                `);
-
-                selectedImage.setAttribute('animation__position', `
-                    property: position;
-                    to: 0 0 0;
-                    dur: 500;
-                    easing: easeInOutQuad;
-                `);
-
-                // Determinar qué estampilla fue seleccionada
-                const stampKey = 
-                    selectedImage === imageRight ? 'derecha' :
-                    selectedImage === imageLeft ? 'izquierda' : 
-                    selectedImage === imageBottom ? 'abajo' : null;
-
-                if (!stampKey) return;
-
-                // Mostrar secuencia de contenedores según la estampilla seleccionada
-                setTimeout(() => {
-                    showContainersSequence(stampKey);
-                }, 1000); // Espera a que termine la animación de la estampilla
-            };
-
-            // Update the click listeners for the stamps
-            [imageRight, imageLeft, imageBottom].forEach((image) => {
-            image.addEventListener('click', () => {
-                selectOrDeselectStamp(image);
-            });
-            });
-
-            
-
-            // Lista de contenedores
-            let containers = [container1, container2, container3];
-
-            // Posiciones iniciales
-            const positions = {
-            last: "0.5 0 0",
-            middle: "0.6 0.1 0.1",
-            first: "0.7 0.2 0.2",
-            };
-
-            // Función para rotar contenedores
-            const rotateContainers = (clickedContainer) => {
-            // Identificar el índice del contenedor clickeado
-            const clickedIndex = containers.indexOf(clickedContainer);
-
-            // Reorganizar el orden de los contenedores según el clic
-            const newOrder = [
-                containers[(clickedIndex + 1) % 3], // El siguiente se convierte en el primero
-                containers[(clickedIndex + 2) % 3], // El último se convierte en el del medio
-                containers[clickedIndex],           // El clickeado se convierte en el último
-            ];
-
-            // Actualizar la lista de contenedores con el nuevo orden
-            containers = newOrder;
-
-            // Asignar las nuevas posiciones con animaciones
-            containers[0].setAttribute('animation', `
-                property: position; 
-                to: ${positions.first}; 
-                dur: 500; 
-                easing: easeInOutQuad;
-            `);
-
-            containers[1].setAttribute('animation', `
-                property: position; 
-                to: ${positions.middle}; 
-                dur: 500; 
-                easing: easeInOutQuad;
-            `);
-
-            containers[2].setAttribute('animation', `
-                property: position; 
-                to: ${positions.last}; 
-                dur: 500; 
-                easing: easeInOutQuad;
-            `);
-            };
-
-            // Asignar evento a cada contenedor
-            containers.forEach((container) => {
-            container.addEventListener('click', () => {
-                rotateContainers(container);
-            });
-            });
-
 
 
             // Obtiene referencias a elementos HTML por su ID. const: declara constantes. document.getElementById: busca un elemento por su ID.
@@ -606,8 +579,6 @@
                 }
             });
         
-
-
             // Define pasos para un tutorial. const: declara una constante. tutorialSteps: nombre de la constante.
             const tutorialSteps = [
                 { title: "Bienvenido", text: "Bienvenido a la experiencia RA. Haz clic en 'Continuar' para comenzar." }, // Paso 1. title: título del paso. text: descripción del paso.
@@ -615,16 +586,16 @@
                 { title: "Insignias", text: "Gana insignias respondiendo correctamente las preguntas." }, // Paso 3.
                 { title: "Más información", text: "Haz clic en 'PIONERAS' en el header para más información." } // Paso 4.
             ];
-        
+
             // Inicializa variables para el tutorial. let: declara variables que se pueden reasignar. currentStep: índice del paso actual.
             let currentStep = 0;
-        
+
             // Obtiene referencias a elementos del tutorial. const: declara constantes. document.getElementById: busca elementos por su ID.
             const modal = document.getElementById("modal"); // Modal que contiene el tutorial.
             const tutorialTitle = document.getElementById("tutorial-title"); // Título del tutorial.
             const tutorialText = document.getElementById("tutorial-text"); // Texto descriptivo del tutorial.
             const tutorialNext = document.getElementById("tutorial-next"); // Botón para avanzar en el tutorial.
-        
+
             // Muestra el paso actual del tutorial. const: declara constante. showTutorialStep: nombre de la función.
             const showTutorialStep = () => {
                 const step = tutorialSteps[currentStep]; // Obtiene el paso actual. step: variable local.
@@ -636,7 +607,7 @@
                     tutorialNext.textContent = "Continuar"; // Cambia el texto del botón a 'Continuar'.
                 }
             };
-        
+
             // Agrega evento para avanzar en el tutorial. addEventListener: agrega un oyente de eventos. click: tipo de evento.
             tutorialNext.addEventListener("click", () => {
                 currentStep++; // Avanza al siguiente paso.
@@ -646,80 +617,9 @@
                     modal.style.display = "none"; // Oculta el modal.
                 }
             });
-        
+
             modal.style.display = "flex"; // Muestra el modal al cargar. style.display: modifica el estilo CSS.
             showTutorialStep(); // Muestra el primer paso del tutorial.
-        
-
-
-            // Contador global de estampillas obtenidas
-            let stampCounter = 0;
-
-            // Preguntas y respuestas correctas
-            const questionsData = {
-                izquierda: {
-                    question: "¿Cuál es la temperatura normal en las bases antárticas?",
-                    options: ["-5C° VERANO, -30c° INVIERNO", "-3C° VERANO, -20c° INVIERNO", "4C° VERANO, -15c° INVIERNO"],
-                    correct: 2,
-                },
-                abajo: {
-                    question: "¿Cuál es el porcentaje de mujeres en el campo de la investigación en Argentina?",
-                    options: ["54%", "38%", "63%"],
-                    correct: 1,
-                },
-            };
-
-            // Mostrar pregunta en el modal de preguntas
-            const showQuestionModal = (stampKey) => {
-                const modal = document.getElementById('question-modal');
-                const title = document.getElementById('question-title');
-                const text = document.getElementById('question-text');
-                const options = document.getElementById('question-options');
-
-                const question = questionData[stampKey];
-
-                // Configurar contenido del modal
-                title.textContent = "Pregunta";
-                text.textContent = question.question;
-                options.innerHTML = ''; // Limpia opciones previas
-
-                question.options.forEach((option, index) => {
-                    const button = document.createElement('button');
-                    button.textContent = option;
-                    button.addEventListener('click', () => handleAnswer(stampKey, index));
-                    options.appendChild(button);
-                });
-
-                // Mostrar modal
-                modal.style.display = 'flex';
-            };
-
-            // Manejar respuesta del usuario
-            const handleAnswer = (stampKey, selectedOption) => {
-                const modal = document.getElementById('question-modal');
-                const question = questionData[stampKey];
-
-                if (selectedOption === question.correct) {
-                    alert("¡Respuesta correcta!");
-                    stampCounter++;
-                    console.log(`Estampillas obtenidas: ${stampCounter}`);
-                } else {
-                    alert("Respuesta incorrecta. Inténtalo de nuevo.");
-                }
-
-                // Ocultar modal
-                modal.style.display = 'none';
-            };
-
-            // Asociar modales con contenedores específicos
-            document.querySelector('#contenedor-antartida-pregunta').addEventListener('click', () => {
-                showQuestionModal('izquierda');
-            });
-
-            document.querySelector('#contenedor-rrii-pregunta').addEventListener('click', () => {
-                showQuestionModal('abajo');
-            });
-
         </script>
         
     </body>
