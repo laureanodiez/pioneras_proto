@@ -101,7 +101,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 30; /* Mayor prioridad que otros modales */
+                z-index: 300; /* Mayor prioridad que otros modales */
                 display: none; /* Este valor debería ser 'none' por defecto */
             }
             #modal-question .modal-cont-content {
@@ -199,6 +199,7 @@
             <div class="modal-cont-content">
                 <p id="question-text"></p>
                 <div id="options-container"></div>
+                <div id="feedback"></div>
                 <button onclick="closeQuestionModal()">Cerrar</button>
             </div>
         </div>
@@ -344,7 +345,7 @@
                 izquierda: {
                     question: "¿Cuál es la temperatura normal en las bases antárticas?",
                     options: ["-5C° VERANO, -30C° INVIERNO", "-3C° VERANO, -20C° INVIERNO", "4C° VERANO, -15C° INVIERNO"],
-                    correct: 2,
+                    correct: 0, // Corregido el índice de respuesta correcta
                 },
                 abajo: {
                     question: "¿Cuál es el porcentaje de mujeres en el campo de la investigación en Argentina?",
@@ -355,49 +356,98 @@
 
             // Mostrar pregunta en un modal separado
             const showQuestionModal = (group) => {
+                console.log(`Mostrando modal de preguntas para grupo: ${group}`);
+                
                 const questionData = questionsData[group];
-                if (!questionData) return;
+                if (!questionData) {
+                    console.error(`No se encontraron datos de pregunta para el grupo: ${group}`);
+                    return;
+                }
 
                 const questionModal = document.getElementById('modal-question');
                 const questionText = document.getElementById('question-text');
                 const optionsContainer = document.getElementById('options-container');
 
-                // Set the question text
-                questionText.textContent = questionData.question;
+                if (!questionModal || !questionText || !optionsContainer) {
+                    console.error('Elementos del modal no encontrados');
+                    return;
+                }
 
-                // Clear previous options
+                // Limpiar contenedor de opciones anteriores
                 optionsContainer.innerHTML = '';
 
-                // Add options as buttons
+                // Establecer texto de la pregunta
+                questionText.textContent = questionData.question;
+
+                // Crear botones de opciones
                 questionData.options.forEach((option, index) => {
                     const button = document.createElement('button');
                     button.textContent = option;
-                    button.onclick = () => checkAnswer(group, index);
+                    button.classList.add('option-button');
+                    button.dataset.group = group;
+                    button.dataset.index = index;
+                    
+                    // Agregar evento de clic
+                    button.addEventListener('click', handleAnswerSelection);
+                    
                     optionsContainer.appendChild(button);
                 });
 
-                // Display the question modal
+                // Crear contenedor de retroalimentación si no existe
+                let feedbackContainer = document.getElementById('feedback');
+                if (!feedbackContainer) {
+                    feedbackContainer = document.createElement('div');
+                    feedbackContainer.id = 'feedback';
+                    optionsContainer.parentNode.insertBefore(feedbackContainer, optionsContainer.nextSibling);
+                }
+
+                // Mostrar modal
                 questionModal.style.display = 'flex';
             };
 
-            // Verificar la respuesta seleccionada
-            const checkAnswer = (group, selectedOption) => {
+            // Función para manejar la selección de respuesta
+            const handleAnswerSelection = (event) => {
+                const selectedButton = event.target;
+                const group = selectedButton.dataset.group;
+                const selectedIndex = parseInt(selectedButton.dataset.index);
+                
+                console.log(`Grupo: ${group}`);
+                console.log(`Índice seleccionado: ${selectedIndex}`);
+                
                 const questionData = questionsData[group];
-                const feedback = document.getElementById('feedback');
+                const feedbackContainer = document.getElementById('feedback');
 
-                if (selectedOption === questionData.correct) {
-                    feedback.textContent = "¡Respuesta correcta!";
-                    feedback.style.color = "green";
-                } else {
-                    feedback.textContent = "Respuesta incorrecta. Intenta nuevamente.";
-                    feedback.style.color = "red";
+                if (!questionData || !feedbackContainer) {
+                    console.error('Datos de pregunta o contenedor de retroalimentación no encontrados');
+                    return;
                 }
+
+                // Verificar respuesta
+                if (selectedIndex === questionData.correct) {
+                    feedbackContainer.textContent = "¡Respuesta correcta! 🎉";
+                    feedbackContainer.style.color = "green";
+                } else {
+                    feedbackContainer.textContent = "Respuesta incorrecta. Intenta nuevamente. 🤔";
+                    feedbackContainer.style.color = "red";
+                }
+
+                // Opcional: Deshabilitar botones después de responder
+                const optionButtons = document.querySelectorAll('.option-button');
+                optionButtons.forEach(button => {
+                    button.disabled = true;
+                });
             };
 
             // Cerrar el modal de pregunta
             const closeQuestionModal = () => {
                 const questionModal = document.getElementById('modal-question');
                 questionModal.style.display = 'none';
+                
+                // Limpiar retroalimentación
+                const feedbackContainer = document.getElementById('feedback');
+                if (feedbackContainer) {
+                    feedbackContainer.textContent = '';
+                }
             };
 
             // Información de las imágenes de cada estampilla
@@ -457,21 +507,14 @@
                 const imgElement = modal.querySelector("img");
                 imgElement.src = modalsData[group][currentIndices[group]];
 
-                // Limpiar preguntas anteriores si no está en el último contenedor
-                const questionContainer = document.getElementById(`question-${group}`);
-                if (questionContainer) {
-                    questionContainer.remove();
-                }
-
                 // Actualizar botones de navegación
                 updateButtons(group);
 
-                // Si es el último contenedor, mostrar pregunta
-                if (group === "izquierda" || group === "abajo") {
-                    const questionIndex = modalsData[group].length - 1;
-                    if (currentIndices[group] === questionIndex) {
-                        showQuestionModal(group); // Llama a la función directamente sin setTimeout
-                    }
+                // Si es el último contenedor y estamos en el último índice, mostrar pregunta
+                const questionIndex = modalsData[group].length - 1;
+                if ((group === "izquierda" || group === "abajo") && currentIndices[group] === questionIndex) {
+                    console.log(`Intentando mostrar pregunta para grupo: ${group}`);
+                    showQuestionModal(group);
                 }
             };
 
@@ -492,30 +535,41 @@
                 const prevButton = document.getElementById(`prev-${group}`);
                 const nextButton = document.getElementById(`next-${group}`);
 
-                // Desactivar el botón "Anterior" si está en la primera imagen
-                if (currentIndices[group] === 0) {
-                    prevButton.disabled = true;
-                } else {
-                    prevButton.disabled = false;
+                // Verificación de existencia de botones
+                if (!prevButton || !nextButton) {
+                    console.error(`Botones no encontrados para el grupo: ${group}`);
+                    return;
                 }
 
+                // Desactivar el botón "Anterior" si está en la primera imagen
+                prevButton.disabled = (currentIndices[group] === 0);
+
                 // Desactivar el botón "Siguiente" si está en la última imagen
-                if (currentIndices[group] === modalsData[group].length - 1) {
-                    nextButton.disabled = true;
-                } else {
-                    nextButton.disabled = false;
-                }
+                // IMPORTANTE: usa length - 1 para comparar con el último índice
+                nextButton.disabled = (currentIndices[group] === modalsData[group].length - 1);
+
+                // Depuración
+                console.log(`Grupo: ${group}`);
+                console.log(`Índice actual: ${currentIndices[group]}`);
+                console.log(`Último índice: ${modalsData[group].length - 1}`);
+                console.log(`Botón siguiente deshabilitado: ${nextButton.disabled}`);
             };
 
             // Navegar a la siguiente imagen
             const showNext = (group) => {
-                if (currentIndices[group] < modalsData[group].length - 1) {
+                const maxIndex = modalsData[group].length - 1;
+                
+                if (currentIndices[group] < maxIndex) {
                     currentIndices[group]++;
                     updateModalContent(group);
+                    
+                    // Si llegamos al último índice, mostrar pregunta
+                    if (currentIndices[group] === maxIndex && (group === 'izquierda' || group === 'abajo')) {
+                        showQuestionModal(group);
+                    }
                 }
             };
 
-            // Navegar a la imagen anterior
             const showPrev = (group) => {
                 if (currentIndices[group] > 0) {
                     currentIndices[group]--;
@@ -620,6 +674,7 @@
 
             modal.style.display = "flex"; // Muestra el modal al cargar. style.display: modifica el estilo CSS.
             showTutorialStep(); // Muestra el primer paso del tutorial.
+        
         </script>
         
     </body>
